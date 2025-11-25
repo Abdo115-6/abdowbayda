@@ -161,6 +161,11 @@ export default function DashboardContent({
     const file = e.target.files?.[0]
     if (!file) return
 
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (JPG, PNG, GIF, etc.)")
+      return
+    }
+
     setIsUploading(true)
     try {
       const formData = new FormData()
@@ -171,13 +176,17 @@ export default function DashboardContent({
         body: formData,
       })
 
-      if (!response.ok) throw new Error("Upload failed")
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Upload failed")
+      }
 
       const data = await response.json()
       setFormData((prev) => ({ ...prev, image_url: data.url }))
+      alert("Image uploaded successfully!")
     } catch (error) {
-      console.error("Error uploading image:", error)
-      alert("Failed to upload image")
+      console.error("[v0] Error uploading image:", error)
+      alert(`Failed to upload image: ${error instanceof Error ? error.message : "Unknown error"}`)
     } finally {
       setIsUploading(false)
     }
@@ -187,6 +196,11 @@ export default function DashboardContent({
     const file = e.target.files?.[0]
     if (!file) return
 
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (JPG, PNG, GIF, etc.)")
+      return
+    }
+
     setIsUploading(true)
     try {
       const formData = new FormData()
@@ -197,13 +211,17 @@ export default function DashboardContent({
         body: formData,
       })
 
-      if (!response.ok) throw new Error("Upload failed")
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Upload failed")
+      }
 
       const data = await response.json()
       setStoreData((prev) => ({ ...prev, store_logo_url: data.url }))
+      alert("Logo uploaded successfully!")
     } catch (error) {
-      console.error("Error uploading logo:", error)
-      alert("Failed to upload logo")
+      console.error("[v0] Error uploading logo:", error)
+      alert(`Failed to upload logo: ${error instanceof Error ? error.message : "Unknown error"}`)
     } finally {
       setIsUploading(false)
     }

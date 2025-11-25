@@ -16,8 +16,7 @@ export default async function MarketplacePage() {
   // Get user profile to check role
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
 
-  // Fetch all products with seller information using proper join
-  const { data: products } = await supabase
+  const { data: products, error: productsError } = await supabase
     .from("products")
     .select(
       `
@@ -31,6 +30,10 @@ export default async function MarketplacePage() {
     `,
     )
     .order("created_at", { ascending: false })
+
+  if (productsError) {
+    console.error("[v0] Error fetching products:", productsError)
+  }
 
   return (
     <MarketplaceContent

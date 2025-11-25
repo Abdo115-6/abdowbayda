@@ -14,14 +14,20 @@ export default async function CheckoutPage({ params }: { params: { productId: st
     redirect("/auth/login")
   }
 
-  // Fetch product details
   const { data: product, error } = await supabase
     .from("products")
-    .select("*, profiles!products_seller_id_fkey(store_name, store_logo_url)")
+    .select(`
+      *,
+      profiles!products_seller_id_fkey(
+        store_name,
+        store_logo_url
+      )
+    `)
     .eq("id", productId)
     .single()
 
   if (error || !product) {
+    console.error("[v0] Error fetching product:", error)
     notFound()
   }
 

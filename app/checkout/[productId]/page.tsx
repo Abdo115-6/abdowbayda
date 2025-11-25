@@ -18,7 +18,7 @@ export default async function CheckoutPage({ params }: { params: { productId: st
     .from("products")
     .select(`
       *,
-      profiles!products_seller_id_fkey(
+      profiles (
         store_name,
         store_logo_url
       )
@@ -30,6 +30,8 @@ export default async function CheckoutPage({ params }: { params: { productId: st
     console.error("[v0] Error fetching product:", error)
     notFound()
   }
+
+  console.log("[v0] Product with profile:", product)
 
   return <CheckoutForm product={product} userId={user.id} />
 }

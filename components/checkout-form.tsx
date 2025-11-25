@@ -21,10 +21,10 @@ type Product = {
   image_url: string | null
   seller_id: string
   stock: number
-  profiles: {
+  profiles?: {
     store_name: string | null
     store_logo_url: string | null
-  }
+  } | null
 }
 
 export default function CheckoutForm({ product, userId }: { product: Product; userId: string }) {
@@ -93,7 +93,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{product.name}</h3>
                   <p className="text-sm text-slate-600 line-clamp-2">{product.description}</p>
-                  {product.profiles?.store_name && (
+                  {product.profiles && product.profiles.store_name && (
                     <p className="text-sm text-slate-500 mt-1">
                       Sold by: <span className="font-medium">{product.profiles.store_name}</span>
                     </p>

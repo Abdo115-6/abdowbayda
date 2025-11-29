@@ -1,0 +1,548 @@
+"use client"
+
+import { useState, useMemo } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search, Users, ShoppingBag, DollarSign, Package, Crown, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+type Profile = {
+  id: string
+  email: string
+  role: string
+  store_name: string | null
+  store_slug: string | null
+  created_at: string
+}
+
+type Product = {
+  id: string
+  name: string
+  price: number
+  stock: number
+  category: string
+  seller_id: string
+  created_at: string
+  profiles?: {
+    store_name: string
+    email: string
+    role: string
+  }
+}
+
+type Order = {
+  id: string
+  product_id: string
+  buyer_id: string
+  seller_id: string
+  quantity: number
+  total_price: number
+  status: string
+  created_at: string
+  products?: {
+    name: string
+    price: number
+    category: string
+    seller_id: string
+    profiles?: {
+      store_name: string
+      email: string
+    }
+  }
+  profiles?: {
+    email: string
+    role: string
+  }
+}
+
+type AdminAnalyticsProps = {
+  profiles: Profile[]
+  products: Product[]
+  orders: Order[]
+  currentUserEmail: string
+}
+
+export default function AdminAnalytics({ profiles, products, orders, currentUserEmail }: AdminAnalyticsProps) {
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [roleFilter, setRoleFilter] = useState<string>("all")
+  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+
+  // Calculate analytics
+  const analytics = useMemo(() => {
+    const totalUsers = profiles.length
+    const sellers = profiles.filter((p) => p.role === "seller")
+    const buyers = profiles.filter((p) => p.role === "buyer")
+    const totalProducts = products.length
+    const totalOrders = orders.length
+    const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_price), 0)
+
+    // Calculate product performance
+    const productSales = orders.reduce(
+      (acc, order) => {
+        if (!acc[order.product_id]) {
+          acc[order.product_id] = {
+            productId: order.product_id,
+            productName: order.products?.name || "Unknown",
+            category: order.products?.category || "Unknown",
+            sellerName: order.products?.profiles?.store_name || "Unknown",
+            totalSales: 0,
+            totalRevenue: 0,
+            orderCount: 0,
+          }
+        }
+        acc[order.product_id].totalSales += order.quantity
+        acc[order.product_id].totalRevenue += Number(order.total_price)
+        acc[order.product_id].orderCount += 1
+        return acc
+      },
+      {} as Record<string, any>,
+    )
+
+    const winningProducts = Object.values(productSales)
+      .sort((a: any, b: any) => b.totalRevenue - a.totalRevenue)
+      .slice(0, 10)
+
+    // Calculate seller performance
+    const sellerStats = sellers
+      .map((seller) => {
+        const sellerProducts = products.filter((p) => p.seller_id === seller.id)
+        const sellerOrders = orders.filter((o) => o.seller_id === seller.id)
+        const revenue = sellerOrders.reduce((sum, order) => sum + Number(order.total_price), 0)
+        const totalSales = sellerOrders.reduce((sum, order) => sum + order.quantity, 0)
+
+        return {
+          id: seller.id,
+          storeName: seller.store_name || "No Store Name",
+          email: seller.email,
+          productsCount: sellerProducts.length,
+          ordersCount: sellerOrders.length,
+          totalRevenue: revenue,
+          totalSales,
+        }
+      })
+      .sort((a, b) => b.totalRevenue - a.totalRevenue)
+
+    return {
+      totalUsers,
+      sellersCount: sellers.length,
+      buyersCount: buyers.length,
+      totalProducts,
+      totalOrders,
+      totalRevenue,
+      winningProducts,
+      sellerStats,
+    }
+  }, [profiles, products, orders])
+
+  // Filter users
+  const filteredProfiles = profiles.filter((profile) => {
+    const matchesSearch =
+      profile.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      profile.store_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesRole = roleFilter === "all" || profile.role === roleFilter
+    return matchesSearch && matchesRole
+  })
+
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
+    return matchesSearch && matchesCategory
+  })
+
+  const categories = Array.from(new Set(products.map((p) => p.category)))
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => router.push("/marketplace")}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold">Admin Analytics</h1>
+                <p className="text-sm text-muted-foreground">Analyze your store performance</p>
+              </div>
+            </div>
+            <Badge variant="outline">{currentUserEmail}</Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Overview Stats */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.totalUsers}</div>
+              <p className="text-xs text-muted-foreground">
+                {analytics.sellersCount} sellers, {analytics.buyersCount} buyers
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.totalProducts}</div>
+              <p className="text-xs text-muted-foreground">Listed in marketplace</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.totalOrders}</div>
+              <p className="text-xs text-muted-foreground">All time orders</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{analytics.totalRevenue.toFixed(2)} MAD</div>
+              <p className="text-xs text-muted-foreground">All time revenue</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="winning" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="winning">Winning Products</TabsTrigger>
+            <TabsTrigger value="sellers">Seller Performance</TabsTrigger>
+            <TabsTrigger value="users">All Users</TabsTrigger>
+            <TabsTrigger value="products">All Products</TabsTrigger>
+            <TabsTrigger value="orders">All Orders</TabsTrigger>
+          </TabsList>
+
+          {/* Winning Products Tab */}
+          <TabsContent value="winning" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Crown className="h-5 w-5 text-yellow-500" />
+                      Top 10 Winning Products
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">Products with highest revenue and sales</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Rank</TableHead>
+                      <TableHead>Product Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Seller</TableHead>
+                      <TableHead className="text-right">Orders</TableHead>
+                      <TableHead className="text-right">Units Sold</TableHead>
+                      <TableHead className="text-right">Revenue</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {analytics.winningProducts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center text-muted-foreground">
+                          No sales data available yet
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      analytics.winningProducts.map((product: any, index: number) => (
+                        <TableRow key={product.productId}>
+                          <TableCell>
+                            <Badge variant={index < 3 ? "default" : "outline"}>#{index + 1}</Badge>
+                          </TableCell>
+                          <TableCell className="font-medium">{product.productName}</TableCell>
+                          <TableCell>{product.category}</TableCell>
+                          <TableCell>{product.sellerName}</TableCell>
+                          <TableCell className="text-right">{product.orderCount}</TableCell>
+                          <TableCell className="text-right">{product.totalSales}</TableCell>
+                          <TableCell className="text-right font-bold">{product.totalRevenue.toFixed(2)} MAD</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Seller Performance Tab */}
+          <TabsContent value="sellers" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Seller Performance</CardTitle>
+                <p className="text-sm text-muted-foreground">Rankings based on total revenue</p>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Rank</TableHead>
+                      <TableHead>Store Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead className="text-right">Products</TableHead>
+                      <TableHead className="text-right">Orders</TableHead>
+                      <TableHead className="text-right">Units Sold</TableHead>
+                      <TableHead className="text-right">Revenue</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {analytics.sellerStats.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center text-muted-foreground">
+                          No sellers yet
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      analytics.sellerStats.map((seller, index) => (
+                        <TableRow key={seller.id}>
+                          <TableCell>
+                            <Badge variant={index < 3 ? "default" : "outline"}>#{index + 1}</Badge>
+                          </TableCell>
+                          <TableCell className="font-medium">{seller.storeName}</TableCell>
+                          <TableCell className="text-sm">{seller.email}</TableCell>
+                          <TableCell className="text-right">{seller.productsCount}</TableCell>
+                          <TableCell className="text-right">{seller.ordersCount}</TableCell>
+                          <TableCell className="text-right">{seller.totalSales}</TableCell>
+                          <TableCell className="text-right font-bold">{seller.totalRevenue.toFixed(2)} MAD</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* All Users Tab */}
+          <TabsContent value="users" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <CardTitle>All Users</CardTitle>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-64">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search by email or store..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-8"
+                      />
+                    </div>
+                    <Select value={roleFilter} onValueChange={setRoleFilter}>
+                      <SelectTrigger className="w-full sm:w-32">
+                        <SelectValue placeholder="Role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Roles</SelectItem>
+                        <SelectItem value="seller">Sellers</SelectItem>
+                        <SelectItem value="buyer">Buyers</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Store Name</TableHead>
+                      <TableHead>Store Slug</TableHead>
+                      <TableHead>Joined</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredProfiles.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                          No users found
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredProfiles.map((profile) => (
+                        <TableRow key={profile.id}>
+                          <TableCell className="font-medium">{profile.email}</TableCell>
+                          <TableCell>
+                            <Badge variant={profile.role === "seller" ? "default" : "secondary"}>{profile.role}</Badge>
+                          </TableCell>
+                          <TableCell>{profile.store_name || "-"}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{profile.store_slug || "-"}</TableCell>
+                          <TableCell className="text-sm">{new Date(profile.created_at).toLocaleDateString()}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* All Products Tab */}
+          <TabsContent value="products" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <CardTitle>All Products</CardTitle>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-64">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-8"
+                      />
+                    </div>
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                      <SelectTrigger className="w-full sm:w-40">
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Product Name</TableHead>
+                      <TableHead>Seller</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead className="text-right">Price</TableHead>
+                      <TableHead className="text-right">Stock</TableHead>
+                      <TableHead>Created</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredProducts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center text-muted-foreground">
+                          No products found
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredProducts.map((product) => (
+                        <TableRow key={product.id}>
+                          <TableCell className="font-medium">{product.name}</TableCell>
+                          <TableCell>{product.profiles?.store_name || "Unknown"}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{product.category}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">{product.price} MAD</TableCell>
+                          <TableCell className="text-right">
+                            <Badge variant={product.stock > 10 ? "default" : "destructive"}>{product.stock}</Badge>
+                          </TableCell>
+                          <TableCell className="text-sm">{new Date(product.created_at).toLocaleDateString()}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* All Orders Tab */}
+          <TabsContent value="orders" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Orders</CardTitle>
+                <p className="text-sm text-muted-foreground">Complete order history</p>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Product</TableHead>
+                      <TableHead>Buyer</TableHead>
+                      <TableHead>Seller</TableHead>
+                      <TableHead className="text-right">Qty</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={8} className="text-center text-muted-foreground">
+                          No orders yet
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      orders.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="font-mono text-xs">{order.id.slice(0, 8)}...</TableCell>
+                          <TableCell>{order.products?.name || "Unknown"}</TableCell>
+                          <TableCell className="text-sm">{order.profiles?.email || "Unknown"}</TableCell>
+                          <TableCell className="text-sm">{order.products?.profiles?.store_name || "Unknown"}</TableCell>
+                          <TableCell className="text-right">{order.quantity}</TableCell>
+                          <TableCell className="text-right font-medium">
+                            {Number(order.total_price).toFixed(2)} MAD
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                order.status === "completed"
+                                  ? "default"
+                                  : order.status === "pending"
+                                    ? "secondary"
+                                    : "destructive"
+                              }
+                            >
+                              {order.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm">{new Date(order.created_at).toLocaleDateString()}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  )
+}

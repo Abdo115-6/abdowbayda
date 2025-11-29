@@ -16,14 +16,14 @@ type Product = {
   price: string
   image_url: string | null
   category: string | null
-  stock: number
   created_at: string
+  seller_id: string
   profiles: {
     id: string
     store_name: string | null
     store_logo_url: string | null
     store_slug: string | null
-  }
+  } | null
 }
 
 export default function MarketplaceContent({
@@ -42,6 +42,12 @@ export default function MarketplaceContent({
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const router = useRouter()
   const supabase = createClient()
+
+  console.log("[v0] Marketplace received products:", products.length)
+  if (products.length > 0) {
+    console.log("[v0] First product:", products[0])
+    console.log("[v0] First product profiles:", products[0].profiles)
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -285,7 +291,18 @@ export default function MarketplaceContent({
                         </div>
                       )}
                       <span className="text-xs text-red-600 font-medium">
-                        {product.profiles?.store_name || "Unknown Seller"}
+                        {(() => {
+                          const storeName = product.profiles?.store_name
+                          console.log(
+                            "[v0] Rendering store name for product:",
+                            product.id,
+                            "Store name:",
+                            storeName,
+                            "Full profile:",
+                            product.profiles,
+                          )
+                          return storeName || product.profiles?.id || "Unknown Seller"
+                        })()}
                       </span>
                     </div>
 
@@ -310,16 +327,14 @@ export default function MarketplaceContent({
                         <span className="text-2xl font-bold text-red-600">
                           ${Number.parseFloat(product.price).toFixed(2)}
                         </span>
-                        <p className="text-xs text-slate-500 mt-1">{product.stock} left</p>
                       </div>
                       <Button
                         size="sm"
                         className="bg-red-600 hover:bg-red-700 gap-2"
                         onClick={() => router.push(`/checkout/${product.id}`)}
-                        disabled={product.stock === 0}
                       >
                         <ShoppingCart className="h-4 w-4" />
-                        {product.stock === 0 ? "Out of Stock" : "Buy Now"}
+                        Buy Now
                       </Button>
                     </div>
                   </CardContent>

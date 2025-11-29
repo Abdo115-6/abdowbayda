@@ -110,6 +110,13 @@ export default function MarketplaceContent({
                 <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
                   Contact
                 </a>
+                <Button
+                  onClick={() => router.push("/incubator")}
+                  variant="ghost"
+                  className="text-slate-700 hover:text-slate-900 font-medium transition-colors"
+                >
+                  Egg Calculator
+                </Button>
               </nav>
             </div>
             <div className="flex items-center gap-3">

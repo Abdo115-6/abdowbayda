@@ -33,6 +33,7 @@ import {
   ShoppingCart,
   CheckCircle,
   XCircle,
+  BarChart3,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -422,6 +423,10 @@ export default function DashboardContent({
             </div>
           </div>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2 bg-transparent">
+              <BarChart3 className="h-4 w-4" />
+              Admin Analytics
+            </Button>
             <Button variant="outline" onClick={handleSwitchToBuyer} className="gap-2 bg-transparent">
               <ShoppingBag className="h-4 w-4" />
               Browse as Buyer

@@ -8,54 +8,92 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { CalendarIcon, AlertCircle, CheckCircle2, Plus, Trash2 } from 'lucide-react'
 import { format, addDays, differenceInDays } from 'date-fns'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 
-// Hatch rate predictions by race
-const hatchRates: Record<string, number> = {
-  chicken: 85,
-  duck: 80,
-  goose: 75,
-  turkey: 82,
-  quail: 88,
+// Chicken breeds with their specific hatch rates
+const chickenBreeds: Record<string, number> = {
+  'Australorp': 90,
+  'Leghorn': 88,
+  'Ayam Cemani': 80,
+  'Brahma': 82,
+  'Orpington': 86,
+  'Sussex': 87,
+  'Rhode Island Red': 89,
+}
+
+interface BreedEntry {
+  id: string
+  breed: string
+  eggCount: number
 }
 
 export default function IncubatorPage() {
   const [startDate, setStartDate] = useState<Date>()
-  const [eggCount, setEggCount] = useState<string>('')
-  const [race, setRace] = useState<string>('')
+  const [breedEntries, setBreedEntries] = useState<BreedEntry[]>([
+    { id: '1', breed: '', eggCount: 0 }
+  ])
   const [isTracking, setIsTracking] = useState(false)
 
+  const handleAddBreed = () => {
+    setBreedEntries([...breedEntries, { id: Date.now().toString(), breed: '', eggCount: 0 }])
+  }
+
+  const handleRemoveBreed = (id: string) => {
+    if (breedEntries.length > 1) {
+      setBreedEntries(breedEntries.filter(entry => entry.id !== id))
+    }
+  }
+
+  const handleBreedChange = (id: string, breed: string) => {
+    setBreedEntries(breedEntries.map(entry => 
+      entry.id === id ? { ...entry, breed } : entry
+    ))
+  }
+
+  const handleEggCountChange = (id: string, count: string) => {
+    const numCount = parseInt(count) || 0
+    setBreedEntries(breedEntries.map(entry => 
+      entry.id === id ? { ...entry, eggCount: numCount } : entry
+    ))
+  }
+
   const handleStartTracking = () => {
-    if (startDate && eggCount && race) {
+    const hasValidEntries = breedEntries.some(entry => entry.breed && entry.eggCount > 0)
+    if (startDate && hasValidEntries) {
       setIsTracking(true)
     }
   }
 
   const handleReset = () => {
     setStartDate(undefined)
-    setEggCount('')
-    setRace('')
+    setBreedEntries([{ id: '1', breed: '', eggCount: 0 }])
     setIsTracking(false)
   }
 
+  // Calculate totals across all breeds
+  const totalEggs = breedEntries.reduce((sum, entry) => sum + entry.eggCount, 0)
+  const totalPredictedHatch = breedEntries.reduce((sum, entry) => {
+    if (entry.breed && entry.eggCount > 0) {
+      return sum + Math.round((entry.eggCount * chickenBreeds[entry.breed]) / 100)
+    }
+    return sum
+  }, 0)
+
   // Calculate milestones
-  const day3 = startDate ? addDays(startDate, 3) : null
-  const day18 = startDate ? addDays(startDate, 18) : null
-  const day21 = startDate ? addDays(startDate, 21) : null
+  const day3 = startDate ? addDays(startDate, 2) : null // Day 3 means 2 days after start
+  const day7 = startDate ? addDays(startDate, 6) : null
+  const day14 = startDate ? addDays(startDate, 13) : null
+  const day18 = startDate ? addDays(startDate, 17) : null
+  const day21 = startDate ? addDays(startDate, 20) : null
   
   const today = new Date()
-  const currentDay = startDate ? Math.min(differenceInDays(today, startDate) + 1, 21) : 0
+  const currentDay = startDate ? Math.min(Math.max(differenceInDays(today, startDate) + 1, 1), 21) : 0
   const progress = (currentDay / 21) * 100
 
-  // Calculate predicted hatch count
-  const predictedHatchCount = eggCount && race 
-    ? Math.round((parseInt(eggCount) * hatchRates[race]) / 100)
-    : 0
-
-  // Timeline data
+  // Enhanced timeline with all key days
   const timeline = [
     {
       day: 1,
@@ -67,34 +105,38 @@ export default function IncubatorPage() {
       day: 3,
       title: 'Day 3 - Start Flipping',
       description: 'Begin turning eggs 3-5 times daily to prevent embryo adhesion',
-      status: currentDay >= 3 ? 'complete' : currentDay === 2 ? 'upcoming' : 'pending',
+      status: currentDay >= 3 ? 'complete' : currentDay === 2 || currentDay === 3 ? 'upcoming' : 'pending',
       alert: true,
     },
     {
       day: 7,
       title: 'Day 7 - First Candling',
-      description: 'Check for embryo development. Remove non-viable eggs',
-      status: currentDay >= 7 ? 'complete' : 'pending',
+      description: 'Check for embryo development. Remove non-viable eggs. Look for blood vessels and dark spot (embryo)',
+      status: currentDay >= 7 ? 'complete' : currentDay === 6 || currentDay === 7 ? 'upcoming' : 'pending',
+      alert: true,
     },
     {
       day: 14,
       title: 'Day 14 - Second Candling',
-      description: 'Verify development progress. Air cell should be visible',
-      status: currentDay >= 14 ? 'complete' : 'pending',
+      description: 'Verify development progress. Air cell should be visible and embryo should fill most of the egg',
+      status: currentDay >= 14 ? 'complete' : currentDay === 13 || currentDay === 14 ? 'upcoming' : 'pending',
+      alert: true,
     },
     {
       day: 18,
-      title: 'Day 18 - Stop Flipping',
-      description: 'Stop turning eggs. Increase humidity to 65-70%, reduce temperature to 37°C',
-      status: currentDay >= 18 ? 'complete' : currentDay >= 16 && currentDay < 18 ? 'upcoming' : 'pending',
+      title: 'Day 18 - Stop Flipping & Lockdown',
+      description: 'STOP turning eggs immediately. Reduce temperature to 37°C, increase humidity to 65-70%. Begin lockdown phase',
+      status: currentDay >= 18 ? 'complete' : currentDay >= 17 && currentDay < 18 ? 'upcoming' : 'pending',
       alert: true,
+      critical: true,
     },
     {
       day: 21,
       title: 'Day 21 - Hatching Day',
-      description: 'Chicks should begin hatching. Maintain high humidity and do not open incubator',
-      status: currentDay >= 21 ? 'complete' : currentDay >= 19 && currentDay < 21 ? 'upcoming' : 'pending',
+      description: 'Chicks should begin hatching. Maintain high humidity and DO NOT OPEN INCUBATOR',
+      status: currentDay >= 21 ? 'complete' : currentDay >= 20 && currentDay < 21 ? 'upcoming' : 'pending',
       alert: true,
+      critical: true,
     },
   ]
 
@@ -102,8 +144,8 @@ export default function IncubatorPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 md:p-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold text-amber-900">Egg Incubator Tracker</h1>
-          <p className="text-muted-foreground">Track your incubation journey from day 1 to hatching</p>
+          <h1 className="mb-2 text-4xl font-bold text-amber-900">🐣 Chicken Egg Incubator Tracker</h1>
+          <p className="text-muted-foreground">Track your 21-day chicken egg incubation journey</p>
         </div>
 
         {!isTracking ? (
@@ -111,7 +153,7 @@ export default function IncubatorPage() {
             <CardHeader>
               <CardTitle>Start New Incubation</CardTitle>
               <CardDescription>
-                Enter the details to begin tracking your egg incubation process
+                Enter the start date and add chicken breeds with egg counts
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -139,38 +181,81 @@ export default function IncubatorPage() {
                 </Popover>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="egg-count">Number of Eggs</Label>
-                <Input
-                  id="egg-count"
-                  type="number"
-                  placeholder="Enter number of eggs"
-                  value={eggCount}
-                  onChange={(e) => setEggCount(e.target.value)}
-                  min="1"
-                />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Chicken Breeds & Egg Counts</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddBreed}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Breed
+                  </Button>
+                </div>
+
+                {breedEntries.map((entry, index) => (
+                  <div key={entry.id} className="flex gap-2">
+                    <div className="flex-1">
+                      <Select
+                        value={entry.breed}
+                        onValueChange={(value) => handleBreedChange(entry.id, value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select breed" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(chickenBreeds).map(([breed, rate]) => (
+                            <SelectItem key={breed} value={breed}>
+                              {breed} ({rate}% hatch rate)
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="w-32">
+                      <Input
+                        type="number"
+                        placeholder="Eggs"
+                        value={entry.eggCount || ''}
+                        onChange={(e) => handleEggCountChange(entry.id, e.target.value)}
+                        min="0"
+                      />
+                    </div>
+                    {breedEntries.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveBreed(entry.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="race">Bird Species/Race</Label>
-                <Select value={race} onValueChange={setRace}>
-                  <SelectTrigger id="race">
-                    <SelectValue placeholder="Select bird species" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="chicken">Chicken (85% hatch rate)</SelectItem>
-                    <SelectItem value="duck">Duck (80% hatch rate)</SelectItem>
-                    <SelectItem value="goose">Goose (75% hatch rate)</SelectItem>
-                    <SelectItem value="turkey">Turkey (82% hatch rate)</SelectItem>
-                    <SelectItem value="quail">Quail (88% hatch rate)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {totalEggs > 0 && (
+                <div className="rounded-lg border bg-muted/50 p-4">
+                  <div className="grid gap-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Eggs:</span>
+                      <span className="font-semibold">{totalEggs}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Expected Hatch:</span>
+                      <span className="font-semibold">{totalPredictedHatch} chicks</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <Button
                 className="w-full"
                 onClick={handleStartTracking}
-                disabled={!startDate || !eggCount || !race}
+                disabled={!startDate || totalEggs === 0}
               >
                 Start Tracking
               </Button>
@@ -202,62 +287,115 @@ export default function IncubatorPage() {
                   <Progress value={progress} className="h-3" />
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   <div className="rounded-lg border bg-card p-4">
                     <div className="text-sm text-muted-foreground">Total Eggs</div>
-                    <div className="text-2xl font-bold">{eggCount}</div>
-                  </div>
-                  <div className="rounded-lg border bg-card p-4">
-                    <div className="text-sm text-muted-foreground">Species</div>
-                    <div className="text-2xl font-bold capitalize">{race}</div>
+                    <div className="text-2xl font-bold">{totalEggs}</div>
                   </div>
                   <div className="rounded-lg border bg-card p-4">
                     <div className="text-sm text-muted-foreground">Expected Hatch</div>
-                    <div className="text-2xl font-bold">
-                      {predictedHatchCount} ({hatchRates[race]}%)
-                    </div>
+                    <div className="text-2xl font-bold">{totalPredictedHatch} chicks</div>
+                  </div>
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="text-sm text-muted-foreground">Expected Finish</div>
+                    <div className="text-lg font-bold">{day21 && format(day21, 'MMM d')}</div>
+                  </div>
+                </div>
+
+                {/* Breed breakdown table */}
+                <div className="rounded-lg border">
+                  <div className="border-b bg-muted/50 px-4 py-2">
+                    <h3 className="font-semibold">Breed Breakdown</h3>
+                  </div>
+                  <div className="divide-y">
+                    {breedEntries.filter(e => e.breed && e.eggCount > 0).map((entry) => {
+                      const hatchRate = chickenBreeds[entry.breed] || 0
+                      const predictedForBreed = Math.round(
+                        (entry.eggCount * hatchRate) / 100
+                      )
+                      const percentOfTotal = totalEggs ? Math.round((entry.eggCount / totalEggs) * 100) : 0
+                      return (
+                        <div key={entry.id} className="grid grid-cols-4 gap-4 px-4 py-3 text-sm">
+                          <div className="col-span-2 font-medium flex items-center gap-2">
+                            <span>{entry.breed}</span>
+                            <span className="text-xs text-muted-foreground">({hatchRate}%)</span>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="font-semibold">{entry.eggCount} eggs</span>
+                            <span className="text-xs text-muted-foreground">{percentOfTotal}% of total</span>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="font-semibold">{predictedForBreed} chicks</span>
+                            <span className="text-xs text-muted-foreground">predicted</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                    {breedEntries.filter(e => e.breed && e.eggCount > 0).length === 0 && (
+                      <div className="px-4 py-3 text-sm text-muted-foreground">No breeds added yet.</div>
+                    )}
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Active Alerts */}
-            {currentDay >= 2 && currentDay < 3 && (
+            {/* Day 3 upcoming (day 2) and day 3 */}
+            {currentDay === 2 && (
               <Alert className="border-orange-500 bg-orange-50">
                 <AlertCircle className="h-4 w-4 text-orange-600" />
                 <AlertTitle className="text-orange-900">Upcoming: Start Flipping Tomorrow</AlertTitle>
                 <AlertDescription className="text-orange-700">
-                  On {day3 && format(day3, 'PPP')}, begin turning eggs 3-5 times daily
+                  On {day3 && format(day3, 'PPP')}, begin turning eggs 3–5 times daily.
                 </AlertDescription>
               </Alert>
             )}
-
-            {currentDay >= 16 && currentDay < 18 && (
+            {currentDay >= 3 && currentDay < 18 && (
               <Alert className="border-blue-500 bg-blue-50">
                 <AlertCircle className="h-4 w-4 text-blue-600" />
-                <AlertTitle className="text-blue-900">Upcoming: Stop Flipping Soon</AlertTitle>
+                <AlertTitle className="text-blue-900">Incubation Ongoing</AlertTitle>
                 <AlertDescription className="text-blue-700">
-                  On {day18 && format(day18, 'PPP')}, stop turning eggs and increase humidity to 65-70%
+                  Keep turning eggs 3–5 times daily until lockdown. Next key date: {day18 && format(day18, 'PPP')}.
                 </AlertDescription>
               </Alert>
             )}
 
-            {currentDay >= 19 && currentDay < 21 && (
+            {/* Day 18 - Critical: Stop flipping, increase humidity */}
+            {currentDay === 17 && (
+              <Alert className="border-yellow-500 bg-yellow-50">
+                <AlertCircle className="h-4 w-4 text-yellow-600" />
+                <AlertTitle className="text-yellow-900">Upcoming Lockdown</AlertTitle>
+                <AlertDescription className="text-yellow-700">
+                  On {day18 && format(day18, 'PPP')} stop turning eggs and prepare to increase humidity and reduce temperature.
+                </AlertDescription>
+              </Alert>
+            )}
+            {currentDay >= 18 && currentDay < 21 && (
+              <Alert className="border-red-500 bg-red-50">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertTitle className="text-red-900">LOCKDOWN: Stop Flipping Now</AlertTitle>
+                <AlertDescription className="text-red-700">
+                  Stop flipping eggs immediately. Reduce temperature to ~37°C and increase humidity to 65–70%. Hatch expected on {day21 && format(day21, 'PPP')}.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Hatching day approaching / reached */}
+            {currentDay === 20 && (
               <Alert className="border-green-500 bg-green-50">
                 <AlertCircle className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-green-900">Hatching Day Approaching</AlertTitle>
+                <AlertTitle className="text-green-900">Hatching Approaching</AlertTitle>
                 <AlertDescription className="text-green-700">
-                  Expected hatch date: {day21 && format(day21, 'PPP')}. Get ready!
+                  Hatching likely tomorrow ({day21 && format(day21, 'PPP')}). Avoid opening the incubator.
                 </AlertDescription>
               </Alert>
             )}
-
             {currentDay >= 21 && (
-              <Alert className="border-green-500 bg-green-50">
+              <Alert className="border-green-700 bg-green-50">
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-green-900">Hatching Day Reached!</AlertTitle>
+                <AlertTitle className="text-green-900">Hatching Day!</AlertTitle>
                 <AlertDescription className="text-green-700">
-                  Expected finish date: {day21 && format(day21, 'PPP')}. Monitor closely and avoid opening the incubator.
+                  Hatching day reached ({day21 && format(day21, 'PPP')}). Monitor chicks closely — avoid opening incubator unless necessary.
                 </AlertDescription>
               </Alert>
             )}
@@ -312,10 +450,20 @@ export default function IncubatorPage() {
                             {item.alert && item.status === 'upcoming' && (
                               <AlertCircle className="h-4 w-4 text-orange-600" />
                             )}
+                            {item.critical && item.status !== 'complete' && (
+                              <span className="ml-2 rounded px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-700">CRITICAL</span>
+                            )}
                           </div>
-                                                   <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground">
                             {item.description}
                           </p>
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            {item.day === 3 && day3 && <div>Scheduled: {format(day3, 'PPP')}</div>}
+                            {item.day === 7 && day7 && <div>Scheduled: {format(day7, 'PPP')}</div>}
+                            {item.day === 14 && day14 && <div>Scheduled: {format(day14, 'PPP')}</div>}
+                            {item.day === 18 && day18 && <div>Scheduled: {format(day18, 'PPP')}</div>}
+                            {item.day === 21 && day21 && <div>Scheduled: {format(day21, 'PPP')}</div>}
+                          </div>
                         </div>
                       </div>
                     </div>

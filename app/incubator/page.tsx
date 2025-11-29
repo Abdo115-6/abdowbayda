@@ -1,241 +1,106 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AlertCircle, CheckCircle2, Clock } from "lucide-react"
+import { AlertCircle, CheckCircle2, Clock, Calendar, Droplets, Thermometer, RotateCw, TrendingUp, Bell, Egg } from 'lucide-react'
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+
+// Breed-specific hatching success rates based on research
+const BREED_SUCCESS_RATES = {
+  "rhode-island-red": { rate: 85, optimalRate: 92, name: "Rhode Island Red" },
+  leghorn: { rate: 88, optimalRate: 94, name: "Leghorn" },
+  "plymouth-rock": { rate: 83, optimalRate: 90, name: "Plymouth Rock" },
+  sussex: { rate: 86, optimalRate: 93, name: "Sussex" },
+  orpington: { rate: 82, optimalRate: 89, name: "Orpington" },
+  wyandotte: { rate: 84, optimalRate: 91, name: "Wyandotte" },
+  brahma: { rate: 80, optimalRate: 87, name: "Brahma" },
+  cornish: { rate: 78, optimalRate: 85, name: "Cornish" },
+}
 
 export default function IncubatorPage() {
+  const [startDate, setStartDate] = useState("")
   const [numEggs, setNumEggs] = useState("")
   const [breed, setBreed] = useState("")
-  const [incubationDays, setIncubationDays] = useState("")
-  const [temperature, setTemperature] = useState("")
   const [showPrediction, setShowPrediction] = useState(false)
 
+  // Calculated milestones
+  const [day3Date, setDay3Date] = useState<Date | null>(null)
+  const [day18Date, setDay18Date] = useState<Date | null>(null)
+  const [hatchDate, setHatchDate] = useState<Date | null>(null)
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null)
+  const [currentPhase, setCurrentPhase] = useState<string>("")
+
+  useEffect(() => {
+    if (startDate) {
+      const start = new Date(startDate)
+      
+      // Calculate milestone dates
+      const d3 = new Date(start)
+      d3.setDate(d3.getDate() + 3)
+      setDay3Date(d3)
+
+      const d18 = new Date(start)
+      d18.setDate(d18.getDate() + 18)
+      setDay18Date(d18)
+
+      const d21 = new Date(start)
+      d21.setDate(d21.getDate() + 21)
+      setHatchDate(d21)
+
+      // Calculate days remaining from today
+      const today = new Date()
+      const diffTime = d21.getTime() - today.getTime()
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setDaysRemaining(diffDays)
+
+      // Determine current phase
+      const daysSinceStart = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+      if (daysSinceStart < 0) {
+        setCurrentPhase("Not Started")
+      } else if (daysSinceStart < 3) {
+        setCurrentPhase("Initial Phase - Prepare to Start Flipping")
+      } else if (daysSinceStart < 18) {
+        setCurrentPhase("Flipping Phase - Active Rotation")
+      } else if (daysSinceStart < 21) {
+        setCurrentPhase("Hatching Phase - Stop Flipping, Increase Humidity")
+      } else {
+        setCurrentPhase("Hatching Complete")
+      }
+    }
+  }, [startDate])
+
   const calculatePredictions = () => {
-    if (numEggs && breed && incubationDays) {
+    if (numEggs && breed && startDate) {
       setShowPrediction(true)
     }
   }
 
-  // Calculate crack risk based on incubation days
-  const getCrackRisk = () => {
-    const days = Number.parseFloat(incubationDays)
-    if (days < 17.5) return { level: "Low", color: "text-green-600", message: "Too early for transfer" }
-    if (days >= 17.5 && days <= 18.5)
-      return { level: "Optimal", color: "text-green-600", message: "Ideal transfer window" }
-    if (days > 18.5 && days < 19)
-      return { level: "Medium", color: "text-amber-600", message: "Acceptable but not ideal" }
-    return { level: "High", color: "text-red-600", message: "Risk of internal pipping disruption" }
-  }
-
-  // Calculate expected hatchability
   const getHatchability = () => {
-    const days = Number.parseFloat(incubationDays)
     const eggs = Number.parseInt(numEggs)
-    let baseRate = 85
+    const breedData = BREED_SUCCESS_RATES[breed as keyof typeof BREED_SUCCESS_RATES]
+    
+    if (!breedData) return null
 
-    if (days >= 17.5 && days <= 18.5) {
-      baseRate = 90
-    } else if (days > 18.5 && days < 19) {
-      baseRate = 82
-    } else if (days >= 19) {
-      baseRate = 70
+    // Base rate from breed
+    let successRate = breedData.rate
+
+    // Calculate if we're in optimal conditions (days 3-18 with proper flipping)
+    const today = new Date()
+    const start = new Date(startDate)
+    const daysSinceStart = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+    
+    // Optimal conditions bonus
+    if (daysSinceStart >= 3 && daysSinceStart <= 18) {
+      successRate = breedData.optimalRate
     }
 
-    // Temperature factor
-    const temp = Number.parseFloat(temperature)
-    if (temp && (temp < 24 || temp > 26)) {
-      baseRate -= 5
-    }
+    const expectedHatch = Math.round((eggs * successRate) / 100)
+    const expectedFail = eggs - expectedHatch
 
-    return {
-      percentage: baseRate,
-      expectedHatch: Math.round((eggs * baseRate) / 100),
-      expectedCracks: Math.round((eggs * (100 - baseRate)) / 100),
-    }
-  }
-
-  const crackRisk = showPrediction ? getCrackRisk() : null
-  const hatchability = showPrediction ? getHatchability() : null
-
-  return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Incubator System Management</h1>
-          <p className="text-muted-foreground">Track and predict egg hatching outcomes based on best practices</p>
-        </div>
-
-        {/* Input Form */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">Egg Transfer Information</h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="numEggs">Number of Hatching Eggs</Label>
-              <Input
-                id="numEggs"
-                type="number"
-                placeholder="Enter number of eggs"
-                value={numEggs}
-                onChange={(e) => setNumEggs(e.target.value)}
-                min="1"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="breed">Breed/Race</Label>
-              <Select value={breed} onValueChange={setBreed}>
-                <SelectTrigger id="breed">
-                  <SelectValue placeholder="Select breed" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="rhode-island-red">Rhode Island Red</SelectItem>
-                  <SelectItem value="leghorn">Leghorn</SelectItem>
-                  <SelectItem value="plymouth-rock">Plymouth Rock</SelectItem>
-                  <SelectItem value="sussex">Sussex</SelectItem>
-                  <SelectItem value="orpington">Orpington</SelectItem>
-                  <SelectItem value="wyandotte">Wyandotte</SelectItem>
-                  <SelectItem value="brahma">Brahma</SelectItem>
-                  <SelectItem value="cornish">Cornish</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="incubationDays">Incubation Days (Current)</Label>
-              <Input
-                id="incubationDays"
-                type="number"
-                step="0.5"
-                placeholder="e.g., 17.5"
-                value={incubationDays}
-                onChange={(e) => setIncubationDays(e.target.value)}
-                min="0"
-                max="21"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="temperature">Transfer Room Temperature (°C)</Label>
-              <Input
-                id="temperature"
-                type="number"
-                step="0.5"
-                placeholder="Recommended: 25°C"
-                value={temperature}
-                onChange={(e) => setTemperature(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <Button
-            onClick={calculatePredictions}
-            className="mt-6 w-full md:w-auto"
-            disabled={!numEggs || !breed || !incubationDays}
-          >
-            Calculate Predictions
-          </Button>
-        </Card>
-
-        {/* Predictions */}
-        {showPrediction && crackRisk && hatchability && (
-          <>
-            <Card className="p-6 border-l-4 border-l-primary">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">Transfer Risk Assessment</h2>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className={`h-5 w-5 ${crackRisk.color}`} />
-                    <span className="text-sm font-medium text-muted-foreground">Crack Risk Level</span>
-                  </div>
-                  <p className={`text-2xl font-bold ${crackRisk.color}`}>{crackRisk.level}</p>
-                  <p className="text-sm text-muted-foreground">{crackRisk.message}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span className="text-sm font-medium text-muted-foreground">Expected Hatchability</span>
-                  </div>
-                  <p className="text-2xl font-bold text-foreground">{hatchability.percentage}%</p>
-                  <p className="text-sm text-muted-foreground">{hatchability.expectedHatch} eggs expected to hatch</p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-amber-600" />
-                    <span className="text-sm font-medium text-muted-foreground">Estimated Cracks</span>
-                  </div>
-                  <p className="text-2xl font-bold text-foreground">{hatchability.expectedCracks}</p>
-                  <p className="text-sm text-muted-foreground">Based on current conditions</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 bg-muted/50">
-              <h2 className="text-lg font-semibold mb-4 text-foreground">Best Practice Recommendations</h2>
-
-              <div className="space-y-3">
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                    1
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">Optimal Transfer Window</p>
-                    <p className="text-sm text-muted-foreground">
-                      Transfer eggs between 17.5 and 18.5 days (420-444 hours) of incubation
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                    2
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">Environmental Control</p>
-                    <p className="text-sm text-muted-foreground">
-                      Maintain transfer room at 25°C with minimal drafts. Complete transfer within 20-30 minutes
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                    3
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">Handle with Care</p>
-                    <p className="text-sm text-muted-foreground">
-                      Rough handling increases crack risk. Use clean, dry baskets. Avoid cooling below 35°C
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                    4
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">Candling Check</p>
-                    <p className="text-sm text-muted-foreground">
-                      Remove infertile or dead eggs (clears) if infertility rate {">"} 15%. Fill baskets to at least 90%
-                      capacity
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </>
-        )}
-      </div>
-    </div>
-  )
-}
+    retur

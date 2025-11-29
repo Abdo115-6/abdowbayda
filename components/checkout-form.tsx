@@ -172,7 +172,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
               <div className="border-t pt-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Price per item:</span>
-                  <span className="font-semibold">${Number.parseFloat(product.price).toFixed(2)}</span>
+                  <span className="font-semibold">{Number.parseFloat(product.price).toFixed(2)} MAD</span>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -191,7 +191,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
 
                 <div className="flex items-center justify-between text-lg font-bold border-t pt-3">
                   <span>Total:</span>
-                  <span className="text-orange-600">${totalPrice}</span>
+                  <span className="text-orange-600">{totalPrice} MAD</span>
                 </div>
 
                 <Badge variant="secondary" className="w-full justify-center py-2">
@@ -234,9 +234,10 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+1 234 567 8900"
+                    placeholder="+212 6XX XXX XXX"
                     disabled={product.stock === 0}
                   />
+                  <p className="text-xs text-slate-500">Moroccan phone number (e.g., +212 612 345 678)</p>
                 </div>
 
                 <div className="space-y-2">
@@ -256,7 +257,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
 
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
                   <p className="font-semibold text-amber-900 mb-1">💵 Cash on Delivery</p>
-                  <p className="text-amber-700">You will pay ${totalPrice} in cash when you receive your order.</p>
+                  <p className="text-amber-700">You will pay {totalPrice} MAD in cash when you receive your order.</p>
                 </div>
 
                 <Button

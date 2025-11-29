@@ -552,10 +552,10 @@ export default function DashboardContent({
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-slate-900">
-                    $
                     {products.length > 0
                       ? (products.reduce((acc, p) => acc + Number.parseFloat(p.price), 0) / products.length).toFixed(2)
-                      : "0.00"}
+                      : "0.00"}{" "}
+                    MAD
                   </div>
                 </CardContent>
               </Card>
@@ -566,7 +566,7 @@ export default function DashboardContent({
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-slate-900">
-                    ${products.reduce((acc, p) => acc + Number.parseFloat(p.price), 0).toFixed(2)}
+                    {products.reduce((acc, p) => acc + Number.parseFloat(p.price), 0).toFixed(2)} MAD
                   </div>
                 </CardContent>
               </Card>
@@ -626,7 +626,7 @@ export default function DashboardContent({
                         </Select>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="price">Price</Label>
+                        <Label htmlFor="price">Price (MAD)</Label>
                         <Input
                           id="price"
                           type="number"
@@ -634,7 +634,9 @@ export default function DashboardContent({
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          placeholder="e.g., 150.00"
                         />
+                        <p className="text-xs text-slate-500">Enter price in Moroccan Dirham (MAD)</p>
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="stock">Stock Quantity</Label>
@@ -723,7 +725,7 @@ export default function DashboardContent({
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-2xl font-bold text-slate-900">
-                          ${Number.parseFloat(product.price).toFixed(2)}
+                          {Number.parseFloat(product.price).toFixed(2)} MAD
                         </span>
                         <div className="flex gap-2">
                           <Dialog
@@ -784,7 +786,7 @@ export default function DashboardContent({
                                     </Select>
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_price">Price</Label>
+                                    <Label htmlFor="edit_price">Price (MAD)</Label>
                                     <Input
                                       id="edit_price"
                                       type="number"
@@ -903,7 +905,7 @@ export default function DashboardContent({
                                   <strong>Quantity:</strong> {order.quantity}
                                 </p>
                                 <p>
-                                  <strong>Total:</strong> ${Number.parseFloat(order.total_price).toFixed(2)}
+                                  <strong>Total:</strong> {Number.parseFloat(order.total_price).toFixed(2)} MAD
                                 </p>
                                 <p>
                                   <strong>Payment:</strong> {order.payment_method.toUpperCase()}

@@ -188,7 +188,7 @@ export default function StoreView({
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-2xl font-bold text-slate-900">
-                          ${Number.parseFloat(product.price).toFixed(2)}
+                          {Number.parseFloat(product.price).toFixed(2)} MAD
                         </span>
                         <Button onClick={() => handleBuyNow(product)} className="bg-orange-500 hover:bg-orange-600">
                           <ShoppingCart className="h-4 w-4 mr-2" />

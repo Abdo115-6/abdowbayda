@@ -325,7 +325,7 @@ export default function MarketplaceContent({
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-2xl font-bold text-red-600">
-                          ${Number.parseFloat(product.price).toFixed(2)}
+                          {Number.parseFloat(product.price).toFixed(2)} MAD
                         </span>
                       </div>
                       <Button

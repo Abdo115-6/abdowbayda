@@ -1,364 +1,331 @@
-// ... existing code ...
+'use client'
 
-  const getHatchability = () => {
-    const eggs = Number.parseInt(numEggs)
-    const breedData = BREED_SUCCESS_RATES[breed as keyof typeof BREED_SUCCESS_RATES]
-    
-    if (!breedData) return null
+import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { CalendarIcon, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { format, addDays, differenceInDays } from 'date-fns'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Progress } from '@/components/ui/progress'
 
-    // Base rate from breed
-    let successRate = breedData.rate
+// Hatch rate predictions by race
+const hatchRates: Record<string, number> = {
+  chicken: 85,
+  duck: 80,
+  goose: 75,
+  turkey: 82,
+  quail: 88,
+}
 
-    // Calculate if we're in optimal conditions (days 3-18 with proper flipping)
-    const today = new Date()
-    const start = new Date(startDate)
-    const daysSinceStart = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-    
-    // Optimal conditions bonus
-    if (daysSinceStart >= 3 && daysSinceStart <= 18) {
-      successRate = breedData.optimalRate
+export default function IncubatorPage() {
+  const [startDate, setStartDate] = useState<Date>()
+  const [eggCount, setEggCount] = useState<string>('')
+  const [race, setRace] = useState<string>('')
+  const [isTracking, setIsTracking] = useState(false)
+
+  const handleStartTracking = () => {
+    if (startDate && eggCount && race) {
+      setIsTracking(true)
     }
-
-    const expectedHatch = Math.round((eggs * successRate) / 100)
-    const expectedFail = eggs - expectedHatch
-
-    // <CHANGE> Completed the return statement that was cut off
-    return {
-      breedName: breedData.name,
-      totalEggs: eggs,
-      successRate,
-      expectedHatch,
-      expectedFail,
-    }
   }
 
-  const prediction = showPrediction && numEggs && breed ? getHatchability() : null
-
-  const formatDate = (date: Date | null) => {
-    if (!date) return ""
-    return date.toLocaleDateString("en-US", { 
-      weekday: 'short',
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    })
+  const handleReset = () => {
+    setStartDate(undefined)
+    setEggCount('')
+    setRace('')
+    setIsTracking(false)
   }
 
-  const getPhaseColor = (phase: string) => {
-    if (phase.includes("Not Started")) return "bg-gray-500"
-    if (phase.includes("Initial")) return "bg-blue-500"
-    if (phase.includes("Flipping")) return "bg-green-500"
-    if (phase.includes("Hatching Phase")) return "bg-orange-500"
-    if (phase.includes("Complete")) return "bg-purple-500"
-    return "bg-gray-500"
-  }
+  // Calculate milestones
+  const day3 = startDate ? addDays(startDate, 3) : null
+  const day18 = startDate ? addDays(startDate, 18) : null
+  const day21 = startDate ? addDays(startDate, 21) : null
+  
+  const today = new Date()
+  const currentDay = startDate ? Math.min(differenceInDays(today, startDate) + 1, 21) : 0
+  const progress = (currentDay / 21) * 100
+
+  // Calculate predicted hatch count
+  const predictedHatchCount = eggCount && race 
+    ? Math.round((parseInt(eggCount) * hatchRates[race]) / 100)
+    : 0
+
+  // Timeline data
+  const timeline = [
+    {
+      day: 1,
+      title: 'Day 1 - Incubation Start',
+      description: 'Begin incubation. Temperature: 37.5°C (99.5°F), Humidity: 50-55%',
+      status: currentDay >= 1 ? 'complete' : 'pending',
+    },
+    {
+      day: 3,
+      title: 'Day 3 - Start Flipping',
+      description: 'Begin turning eggs 3-5 times daily to prevent embryo adhesion',
+      status: currentDay >= 3 ? 'complete' : currentDay === 2 ? 'upcoming' : 'pending',
+      alert: true,
+    },
+    {
+      day: 7,
+      title: 'Day 7 - First Candling',
+      description: 'Check for embryo development. Remove non-viable eggs',
+      status: currentDay >= 7 ? 'complete' : 'pending',
+    },
+    {
+      day: 14,
+      title: 'Day 14 - Second Candling',
+      description: 'Verify development progress. Air cell should be visible',
+      status: currentDay >= 14 ? 'complete' : 'pending',
+    },
+    {
+      day: 18,
+      title: 'Day 18 - Stop Flipping',
+      description: 'Stop turning eggs. Increase humidity to 65-70%, reduce temperature to 37°C',
+      status: currentDay >= 18 ? 'complete' : currentDay >= 16 && currentDay < 18 ? 'upcoming' : 'pending',
+      alert: true,
+    },
+    {
+      day: 21,
+      title: 'Day 21 - Hatching Day',
+      description: 'Chicks should begin hatching. Maintain high humidity and do not open incubator',
+      status: currentDay >= 21 ? 'complete' : currentDay >= 19 && currentDay < 21 ? 'upcoming' : 'pending',
+      alert: true,
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-12 px-4">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Egg className="w-12 h-12 text-orange-600" />
-            <h1 className="text-4xl font-bold text-gray-900">Incubator Management System</h1>
-          </div>
-          <p className="text-lg text-gray-600">
-            Optimize egg transfer and track hatching predictions based on best practices
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 md:p-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 text-center">
+          <h1 className="mb-2 text-4xl font-bold text-amber-900">Egg Incubator Tracker</h1>
+          <p className="text-muted-foreground">Track your incubation journey from day 1 to hatching</p>
         </div>
 
-        {/* Input Card */}
-        <Card className="p-6 mb-6 bg-white/90 backdrop-blur shadow-xl">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-orange-600" />
-            Incubation Details
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
-            <div>
-              <Label htmlFor="startDate" className="text-base font-medium mb-2 block">
-                Incubation Start Date
-              </Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+        {!isTracking ? (
+          <Card className="mx-auto max-w-2xl">
+            <CardHeader>
+              <CardTitle>Start New Incubation</CardTitle>
+              <CardDescription>
+                Enter the details to begin tracking your egg incubation process
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="start-date">Start Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="start-date"
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {startDate ? format(startDate, 'PPP') : 'Select start date'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="egg-count">Number of Eggs</Label>
+                <Input
+                  id="egg-count"
+                  type="number"
+                  placeholder="Enter number of eggs"
+                  value={eggCount}
+                  onChange={(e) => setEggCount(e.target.value)}
+                  min="1"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="race">Bird Species/Race</Label>
+                <Select value={race} onValueChange={setRace}>
+                  <SelectTrigger id="race">
+                    <SelectValue placeholder="Select bird species" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="chicken">Chicken (85% hatch rate)</SelectItem>
+                    <SelectItem value="duck">Duck (80% hatch rate)</SelectItem>
+                    <SelectItem value="goose">Goose (75% hatch rate)</SelectItem>
+                    <SelectItem value="turkey">Turkey (82% hatch rate)</SelectItem>
+                    <SelectItem value="quail">Quail (88% hatch rate)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button
                 className="w-full"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="numEggs" className="text-base font-medium mb-2 block">
-                Number of Eggs
-              </Label>
-              <Input
-                id="numEggs"
-                type="number"
-                min="1"
-                placeholder="Enter egg count"
-                value={numEggs}
-                onChange={(e) => setNumEggs(e.target.value)}
-                className="w-full"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="breed" className="text-base font-medium mb-2 block">
-                Chicken Breed
-              </Label>
-              <Select value={breed} onValueChange={setBreed}>
-                <SelectTrigger id="breed" className="w-full">
-                  <SelectValue placeholder="Select breed" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(BREED_SUCCESS_RATES).map(([key, data]) => (
-                    <SelectItem key={key} value={key}>
-                      {data.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <Button 
-            onClick={calculatePredictions}
-            disabled={!startDate || !numEggs || !breed}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-6 text-lg"
-          >
-            <TrendingUp className="w-5 h-5 mr-2" />
-            Calculate Predictions & Milestones
-          </Button>
-        </Card>
-
-        {/* Current Phase Alert */}
-        {startDate && currentPhase && (
-          <Alert className="mb-6 border-2 bg-white/90 backdrop-blur">
-            <AlertCircle className="h-5 w-5" />
-            <AlertDescription className="text-base">
-              <div className="flex items-center gap-3">
-                <Badge className={`${getPhaseColor(currentPhase)} text-white px-3 py-1`}>
-                  {currentPhase}
-                </Badge>
-                {daysRemaining !== null && daysRemaining > 0 && (
-                  <span className="text-gray-700 font-medium">
-                    {daysRemaining} days until hatching
-                  </span>
-                )}
-                {daysRemaining !== null && daysRemaining <= 0 && (
-                  <span className="text-green-700 font-medium">
-                    Hatching window is now!
-                  </span>
-                )}
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Timeline and Instructions */}
-        {startDate && day3Date && day18Date && hatchDate && (
-          <Card className="p-6 mb-6 bg-white/90 backdrop-blur shadow-xl">
-            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-              <Clock className="w-6 h-6 text-orange-600" />
-              Incubation Timeline & Instructions
-            </h2>
-
-            <div className="space-y-6">
-              {/* Day 0-3 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <Badge variant="outline" className="text-sm">Day 0-3</Badge>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1">
-                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-1">Initial Phase</h3>
-                      <p className="text-gray-600 mb-2">
-                        Temperature: 37.5-37.8°C (99.5-100°F) | Humidity: 50-55%
-                      </p>
-                      <Alert className="bg-blue-50 border-blue-200">
-                        <Bell className="h-4 w-4 text-blue-600" />
-                        <AlertDescription>
-                          <strong>Day 3 ({formatDate(day3Date)}):</strong> Start flipping eggs every 2-4 hours to prevent embryo adhesion
-                        </AlertDescription>
-                      </Alert>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Day 3-18 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <Badge variant="outline" className="text-sm">Day 3-18</Badge>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1">
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="w-full">
-                      <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
-                        <RotateCw className="w-5 h-5 text-green-600" />
-                        Active Flipping Phase
-                      </h3>
-                      <p className="text-gray-600 mb-2">
-                        Temperature: 37.5-37.8°C (99.5-100°F) | Humidity: 50-55%
-                      </p>
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <ul className="space-y-2 text-sm text-gray-700">
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Flip eggs minimum 3 times per day (every 2-4 hours is optimal)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Maintain consistent temperature and humidity
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Monitor for any contaminated eggs and remove them
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Day 18 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <Badge variant="outline" className="text-sm bg-orange-100">Day 18</Badge>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1">
-                      <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                    </div>
-                    <div className="w-full">
-                      <h3 className="font-semibold text-lg mb-1">Transfer to Hatcher</h3>
-                      <p className="text-gray-700 font-medium mb-2">
-                        📅 Transfer Date: {formatDate(day18Date)}
-                      </p>
-                      <Alert className="bg-orange-50 border-orange-200 mb-3">
-                        <AlertCircle className="h-4 w-4 text-orange-600" />
-                        <AlertDescription>
-                          <strong>CRITICAL:</strong> Transfer eggs between 17.5-18.5 days. Stop all flipping after transfer.
-                        </AlertDescription>
-                      </Alert>
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                        <h4 className="font-semibold mb-2 flex items-center gap-2">
-                          <Thermometer className="w-4 h-4" />
-                          Adjust Settings:
-                        </h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
-                          <li className="flex items-center gap-2">
-                            <Thermometer className="w-4 h-4 text-orange-600" />
-                            Reduce temperature to 36.5-37°C (97.7-98.6°F)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <Droplets className="w-4 h-4 text-blue-600" />
-                            Increase humidity to 65-70%
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Transfer within 20-30 minutes in 25°C room
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Use clean, dry hatching baskets
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Day 18-21 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <Badge variant="outline" className="text-sm bg-purple-100">Day 18-21</Badge>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1">
-                      <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-1">Hatching Phase</h3>
-                      <p className="text-gray-600 mb-2">
-                        Temperature: 36.5-37°C (97.7-98.6°F) | Humidity: 65-70%
-                      </p>
-                      <p className="text-gray-700 font-medium mb-2">
-                        🐣 Expected Hatch Date: {formatDate(hatchDate)}
-                      </p>
-                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                        <ul className="space-y-2 text-sm text-gray-700">
-                          <li className="flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4 text-purple-600" />
-                            Do NOT open incubator during hatching
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4 text-purple-600" />
-                            Maintain high humidity to prevent membrane drying
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            Monitor for signs of internal/external pipping
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                onClick={handleStartTracking}
+                disabled={!startDate || !eggCount || !race}
+              >
+                Start Tracking
+              </Button>
+            </CardContent>
           </Card>
+        ) : (
+          <div className="space-y-6">
+            {/* Overview Card */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Incubation Progress</CardTitle>
+                    <CardDescription>
+                      Day {currentDay} of 21 • Started {startDate && format(startDate, 'PPP')}
+                    </CardDescription>
+                  </div>
+                  <Button variant="outline" onClick={handleReset}>
+                    Reset
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="font-medium">Progress</span>
+                    <span className="text-muted-foreground">{Math.round(progress)}%</span>
+                  </div>
+                  <Progress value={progress} className="h-3" />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="text-sm text-muted-foreground">Total Eggs</div>
+                    <div className="text-2xl font-bold">{eggCount}</div>
+                  </div>
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="text-sm text-muted-foreground">Species</div>
+                    <div className="text-2xl font-bold capitalize">{race}</div>
+                  </div>
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="text-sm text-muted-foreground">Expected Hatch</div>
+                    <div className="text-2xl font-bold">
+                      {predictedHatchCount} ({hatchRates[race]}%)
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Active Alerts */}
+            {currentDay >= 2 && currentDay < 3 && (
+              <Alert className="border-orange-500 bg-orange-50">
+                <AlertCircle className="h-4 w-4 text-orange-600" />
+                <AlertTitle className="text-orange-900">Upcoming: Start Flipping Tomorrow</AlertTitle>
+                <AlertDescription className="text-orange-700">
+                  On {day3 && format(day3, 'PPP')}, begin turning eggs 3-5 times daily
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {currentDay >= 16 && currentDay < 18 && (
+              <Alert className="border-blue-500 bg-blue-50">
+                <AlertCircle className="h-4 w-4 text-blue-600" />
+                <AlertTitle className="text-blue-900">Upcoming: Stop Flipping Soon</AlertTitle>
+                <AlertDescription className="text-blue-700">
+                  On {day18 && format(day18, 'PPP')}, stop turning eggs and increase humidity to 65-70%
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {currentDay >= 19 && currentDay < 21 && (
+              <Alert className="border-green-500 bg-green-50">
+                <AlertCircle className="h-4 w-4 text-green-600" />
+                <AlertTitle className="text-green-900">Hatching Day Approaching</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  Expected hatch date: {day21 && format(day21, 'PPP')}. Get ready!
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {currentDay >= 21 && (
+              <Alert className="border-green-500 bg-green-50">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <AlertTitle className="text-green-900">Hatching Day Reached!</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  Expected finish date: {day21 && format(day21, 'PPP')}. Monitor closely and avoid opening the incubator.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle>21-Day Incubation Timeline</CardTitle>
+                <CardDescription>Key milestones and care instructions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="relative space-y-6">
+                  {timeline.map((item, index) => (
+                    <div key={item.day} className="relative flex gap-4">
+                      {/* Timeline line */}
+                      {index !== timeline.length - 1 && (
+                        <div className="absolute left-4 top-8 h-full w-0.5 bg-border" />
+                      )}
+                      
+                      {/* Status indicator */}
+                      <div className="relative flex-shrink-0">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
+                            item.status === 'complete'
+                              ? 'border-green-500 bg-green-500 text-white'
+                              : item.status === 'upcoming'
+                              ? 'border-orange-500 bg-orange-500 text-white'
+                              : 'border-border bg-background'
+                          }`}
+                        >
+                          {item.status === 'complete' ? (
+                            <CheckCircle2 className="h-4 w-4" />
+                          ) : (
+                            <span className="text-xs font-semibold">{item.day}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 pb-6">
+                        <div
+                          className={`rounded-lg border p-4 ${
+                            item.status === 'upcoming'
+                              ? 'border-orange-500 bg-orange-50'
+                              : item.status === 'complete'
+                              ? 'border-green-500 bg-green-50'
+                              : 'bg-card'
+                          }`}
+                        >
+                          <div className="mb-1 flex items-center gap-2">
+                            <h3 className="font-semibold">{item.title}</h3>
+                            {item.alert && item.status === 'upcoming' && (
+                              <AlertCircle className="h-4 w-4 text-orange-600" />
+                            )}
+                          </div>
+                                                   <p className="text-sm text-muted-foreground">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
-
-        {/* Prediction Results */}
-        {prediction && showPrediction && (
-          <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 shadow-xl">
-            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-              Hatching Predictions for {prediction.breedName}
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-white rounded-lg p-6 text-center shadow-md">
-                <Egg className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-                <p className="text-gray-600 mb-1 text-sm font-medium">Total Eggs</p>
-                <p className="text-4xl font-bold text-gray-900">{prediction.totalEggs}</p>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 text-center shadow-md">
-                <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto mb-3" />
-                <p className="text-gray-600 mb-1 text-sm font-medium">Expected Hatch</p>
-                <p className="text-4xl font-bold text-green-600">{prediction.expectedHatch}</p>
-                <p className="text-sm text-gray-500 mt-1">{prediction.successRate}% success rate</p>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 text-center shadow-md">
-                <AlertCircle className="w-10 h-10 text-orange-600 mx-auto mb-3" />
-                <p className="text-gray-600 mb-1 text-sm font-medium">Expected Fail</p>
-                <p className="text-4xl font-bold text-orange-600">{prediction.expectedFail}</p>
-                <p className="text-sm text-gray-500 mt-1">Infertile or early death</p>
-              </div>
-            </div>
-
-            <Alert className="bg-blue-50 border-blue-200">
-              <AlertCircle className="h-4 w-4 text-blue-600" />
-              <AlertDescription>
-                <strong>Note:</strong> Success rates are based on optimal conditions including prope
+      </div>
+    </div>
+  )
+}

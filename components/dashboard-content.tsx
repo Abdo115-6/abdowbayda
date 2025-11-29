@@ -246,6 +246,11 @@ export default function DashboardContent({
     setIsLoading(true)
 
     try {
+      if (!storeData.store_name.trim()) {
+        alert("Store name is required")
+        return
+      }
+
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -257,9 +262,11 @@ export default function DashboardContent({
       if (error) throw error
 
       setIsStoreDialogOpen(false)
+      alert("✅ Store settings saved successfully!")
       router.refresh()
     } catch (error) {
-      console.error("Error updating store:", error)
+      console.error("Error saving store:", error)
+      alert("❌ Failed to save store settings. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -275,35 +282,40 @@ export default function DashboardContent({
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) throw new Error("Not authenticated")
+      if (!formData.name.trim()) {
+        alert("Product name is required")
+        return
+      }
+      if (Number.parseFloat(formData.price) <= 0) {
+        alert("Price must be greater than 0")
+        return
+      }
 
       const { data, error } = await supabase
         .from("products")
-        .insert({
-          seller_id: user.id,
-          name: formData.name,
-          description: formData.description || null,
-          price: Number.parseFloat(formData.price),
-          image_url: formData.image_url || null,
-          category: formData.category || null,
-          stock: Number.parseInt(formData.stock),
-        })
+        .insert([
+          {
+            name: formData.name,
+            description: formData.description,
+            price: formData.price,
+            image_url: formData.image_url || null,
+            category: formData.category || null,
+            stock: Number.parseInt(formData.stock),
+            seller_id: userId,
+          },
+        ])
         .select()
-        .single()
 
       if (error) throw error
 
-      setProducts([data, ...products])
+      setProducts([...products, data[0]])
       setIsAddDialogOpen(false)
       resetForm()
+      alert("✅ Product added successfully!")
     } catch (error) {
       console.error("Error adding product:", error)
+      alert("❌ Failed to add product. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -312,45 +324,60 @@ export default function DashboardContent({
   const handleEditProduct = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editingProduct) return
-    setIsLoading(true)
 
+    setIsLoading(true)
     try {
+      if (!formData.name.trim()) {
+        alert("Product name is required")
+        return
+      }
+      if (Number.parseFloat(formData.price) <= 0) {
+        alert("Price must be greater than 0")
+        return
+      }
+
       const { data, error } = await supabase
         .from("products")
         .update({
           name: formData.name,
-          description: formData.description || null,
-          price: Number.parseFloat(formData.price),
+          description: formData.description,
+          price: formData.price,
           image_url: formData.image_url || null,
           category: formData.category || null,
           stock: Number.parseInt(formData.stock),
-          updated_at: new Date().toISOString(),
         })
         .eq("id", editingProduct.id)
         .select()
-        .single()
 
       if (error) throw error
 
-      setProducts(products.map((p) => (p.id === data.id ? data : p)))
+      setProducts(products.map((p) => (p.id === editingProduct.id ? data[0] : p)))
       setEditingProduct(null)
       resetForm()
+      alert("✅ Product updated successfully!")
     } catch (error) {
       console.error("Error updating product:", error)
+      alert("❌ Failed to update product. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleDeleteProduct = async (id: string) => {
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("⚠️ Are you sure you want to delete this product? This action cannot be undone.")) {
+      return
+    }
+
     try {
-      const { error } = await supabase.from("products").delete().eq("id", id)
+      const { error } = await supabase.from("products").delete().eq("id", productId)
 
       if (error) throw error
 
-      setProducts(products.filter((p) => p.id !== id))
+      setProducts(products.filter((p) => p.id !== productId))
+      alert("✅ Product deleted successfully!")
     } catch (error) {
       console.error("Error deleting product:", error)
+      alert("❌ Failed to delete product. Please try again.")
     }
   }
 
@@ -367,18 +394,13 @@ export default function DashboardContent({
   }
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Badge variant="secondary">Pending</Badge>
-      case "approved":
-        return <Badge className="bg-blue-500 hover:bg-blue-600">Approved</Badge>
-      case "completed":
-        return <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
-      case "refused":
-        return <Badge variant="destructive">Refused</Badge>
-      default:
-        return <Badge variant="outline">{status}</Badge>
+    const badges = {
+      pending: <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">⏳ Pending</Badge>,
+      approved: <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✅ Approved</Badge>,
+      refused: <Badge className="bg-red-100 text-red-800 hover:bg-red-100">❌ Refused</Badge>,
+      completed: <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">🎉 Completed</Badge>,
     }
+    return badges[status as keyof typeof badges] || <Badge>{status}</Badge>
   }
 
   return (
@@ -501,9 +523,10 @@ export default function DashboardContent({
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders" className="relative">
+              <ShoppingCart className="h-4 w-4 mr-2" />
               Orders
               {orders.filter((o) => o.status === "pending").length > 0 && (
-                <Badge className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500">
+                <Badge className="ml-2 bg-red-500 text-white h-5 w-5 p-0 flex items-center justify-center rounded-full">
                   {orders.filter((o) => o.status === "pending").length}
                 </Badge>
               )}

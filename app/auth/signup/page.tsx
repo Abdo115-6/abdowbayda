@@ -11,6 +11,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { AlertCircle, Loader2, ShoppingBag, Store } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("")
@@ -26,6 +28,18 @@ export default function SignUpPage() {
     const supabase = createClient()
     setIsLoading(true)
     setError(null)
+
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address")
+      setIsLoading(false)
+      return
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters")
+      setIsLoading(false)
+      return
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match")
@@ -51,7 +65,12 @@ export default function SignUpPage() {
 
       router.push("/auth/verify-email")
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      const errorMessage = error instanceof Error ? error.message : "An error occurred"
+      if (errorMessage.includes("already registered")) {
+        setError("This email is already registered. Please sign in instead.")
+      } else {
+        setError(errorMessage)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -62,6 +81,9 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <Card className="border-slate-200 shadow-lg">
           <CardHeader className="space-y-1">
+            <div className="text-center mb-2">
+              <h1 className="text-3xl font-bold text-red-600">FarmEgg</h1>
+            </div>
             <CardTitle className="text-2xl font-bold text-slate-900">Create Account</CardTitle>
             <CardDescription className="text-slate-600">Sign up to start buying or selling</CardDescription>
           </CardHeader>
@@ -80,6 +102,7 @@ export default function SignUpPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="border-slate-300"
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -93,6 +116,8 @@ export default function SignUpPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="border-slate-300"
+                    disabled={isLoading}
+                    placeholder="At least 6 characters"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -106,30 +131,47 @@ export default function SignUpPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="border-slate-300"
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="grid gap-3">
                   <Label className="text-slate-700">I want to</Label>
-                  <RadioGroup value={role} onValueChange={(value) => setRole(value as "seller" | "buyer")}>
-                    <div className="flex items-center space-x-3 rounded-lg border border-slate-300 p-3 hover:bg-slate-50 transition-colors">
+                  <RadioGroup
+                    value={role}
+                    onValueChange={(value) => setRole(value as "seller" | "buyer")}
+                    disabled={isLoading}
+                  >
+                    <div className="flex items-center space-x-3 rounded-lg border border-slate-300 p-3 hover:bg-slate-50 transition-colors cursor-pointer">
                       <RadioGroupItem value="buyer" id="buyer" />
+                      <ShoppingBag className="h-5 w-5 text-slate-600" />
                       <Label htmlFor="buyer" className="flex-1 cursor-pointer text-slate-700 font-normal">
-                        Buy products
+                        Buy products from local farms
                       </Label>
                     </div>
-                    <div className="flex items-center space-x-3 rounded-lg border border-slate-300 p-3 hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center space-x-3 rounded-lg border border-slate-300 p-3 hover:bg-slate-50 transition-colors cursor-pointer">
                       <RadioGroupItem value="seller" id="seller" />
+                      <Store className="h-5 w-5 text-slate-600" />
                       <Label htmlFor="seller" className="flex-1 cursor-pointer text-slate-700 font-normal">
-                        Sell products
+                        Sell my farm products
                       </Label>
                     </div>
                   </RadioGroup>
                 </div>
                 {error && (
-                  <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">{error}</div>
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
                 )}
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Creating account..." : "Sign Up"}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    "Sign Up"
+                  )}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm text-slate-600">

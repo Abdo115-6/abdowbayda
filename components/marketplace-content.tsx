@@ -88,15 +88,20 @@ export default function MarketplaceContent({
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
-              <h1 className="text-2xl font-bold text-red-600">FarmEgg</h1>
+              <button
+                onClick={() => router.push("/marketplace")}
+                className="text-2xl font-bold text-red-600 hover:text-red-700 transition-colors"
+              >
+                FarmEgg
+              </button>
               <nav className="hidden md:flex items-center gap-6">
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium">
+                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
                   Shop
                 </a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium">
+                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
                   About
                 </a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium">
+                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
                   Contact
                 </a>
               </nav>
@@ -311,9 +316,10 @@ export default function MarketplaceContent({
                         size="sm"
                         className="bg-red-600 hover:bg-red-700 gap-2"
                         onClick={() => router.push(`/checkout/${product.id}`)}
+                        disabled={product.stock === 0}
                       >
                         <ShoppingCart className="h-4 w-4" />
-                        Add to Cart
+                        {product.stock === 0 ? "Out of Stock" : "Buy Now"}
                       </Button>
                     </div>
                   </CardContent>

@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { AlertCircle, Loader2 } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -25,6 +27,18 @@ export default function LoginPage() {
     setError(null)
 
     try {
+      if (!email.includes("@")) {
+        setError("Please enter a valid email address")
+        setIsLoading(false)
+        return
+      }
+
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters")
+        setIsLoading(false)
+        return
+      }
+
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -48,7 +62,12 @@ export default function LoginPage() {
         router.push("/marketplace")
       }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      const errorMessage = error instanceof Error ? error.message : "An error occurred"
+      if (errorMessage.includes("Invalid login credentials")) {
+        setError("Invalid email or password. Please try again.")
+      } else {
+        setError(errorMessage)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -59,6 +78,9 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <Card className="border-slate-200 shadow-lg">
           <CardHeader className="space-y-1">
+            <div className="text-center mb-2">
+              <h1 className="text-3xl font-bold text-red-600">FarmEgg</h1>
+            </div>
             <CardTitle className="text-2xl font-bold text-slate-900">Welcome Back</CardTitle>
             <CardDescription className="text-slate-600">Enter your credentials to access your account</CardDescription>
           </CardHeader>
@@ -77,6 +99,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="border-slate-300"
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -90,17 +113,28 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="border-slate-300"
+                    disabled={isLoading}
                   />
                 </div>
                 {error && (
-                  <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">{error}</div>
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
                 )}
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Signing in..." : "Sign In"}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm text-slate-600">
-                Don&apos;t have an account?{" "}
+                Don't have an account?{" "}
                 <Link
                   href="/auth/signup"
                   className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-4"

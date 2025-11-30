@@ -1,6 +1,7 @@
 "use client"
 
 import { DialogTrigger } from "@/components/ui/dialog"
+import { useLanguage } from "@/contexts/language-context"
 
 import type React from "react"
 
@@ -36,6 +37,7 @@ import {
   XCircle,
   BarChart3,
   ExternalLink,
+  TrendingUp,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -105,6 +107,7 @@ export default function DashboardContent({
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
+  const { t } = useLanguage()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -120,6 +123,7 @@ export default function DashboardContent({
     store_name: profile.store_name || "",
     store_logo_url: profile.store_logo_url || "",
     store_cover_url: profile.store_cover_url || "",
+    store_slug: profile.store_slug || "",
   })
 
   useEffect(() => {
@@ -348,7 +352,7 @@ export default function DashboardContent({
   }
 
   const copyStoreUrl = () => {
-    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/store/${profile.store_slug || userId}`
+    const url = `${window.location.origin}/store/${storeData.store_slug || userId}`
     navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -555,36 +559,39 @@ export default function DashboardContent({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white shadow-sm">
+    <div className="min-h-screen bg-background">
+      <header className="bg-card shadow-sm border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {storeData.store_logo_url && (
+            {storeData.store_logo_url ? (
               <img
                 src={storeData.store_logo_url || "/placeholder.svg"}
                 alt="Store Logo"
-                className="h-12 w-12 rounded-lg object-cover"
+                className="h-12 w-12 rounded-full object-cover"
               />
+            ) : (
+              <Store className="h-8 w-8 text-primary" />
             )}
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">{storeData.store_name || "Seller Dashboard"}</h1>
-              <p className="text-sm text-slate-600">{userEmail}</p>
+              <h1 className="text-2xl font-bold text-card-foreground">
+                {storeData.store_name || t("dashboard.title")}
+              </h1>
+              <p className="text-sm text-muted-foreground">{userEmail}</p>
             </div>
           </div>
           <div className="flex gap-2">
             <LanguageThemeSwitcher />
-            <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2 bg-transparent">
+            <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2">
               <BarChart3 className="h-4 w-4" />
-              Admin Analytics
+              {t("dashboard.adminAnalytics")}
             </Button>
             <Button variant="outline" onClick={handleSwitchToBuyer} className="gap-2 bg-transparent">
               <ShoppingBag className="h-4 w-4" />
-              Browse as Buyer
+              {t("dashboard.browseAsBuyer")}
             </Button>
             <Button variant="outline" onClick={handleLogout} className="gap-2 bg-transparent">
               <LogOut className="h-4 w-4" />
-              Logout
+              {t("nav.logout")}
             </Button>
           </div>
         </div>
@@ -593,34 +600,37 @@ export default function DashboardContent({
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Store Settings Card */}
-        <Card className="mb-8 bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200">
+        <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 border-orange-200 dark:border-orange-800 mb-8">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2 text-orange-900">
+                <CardTitle className="flex items-center gap-2 text-orange-900 dark:text-orange-100">
                   <Store className="h-5 w-5" />
-                  Your Store
+                  {t("dashboard.storeSettings.yourStore")}
                 </CardTitle>
-                <CardDescription className="text-orange-700">
-                  Manage your store settings and share your unique store URL
+                <CardDescription className="text-orange-700 dark:text-orange-300">
+                  {t("dashboard.storeSettings.manageStore")}
                 </CardDescription>
               </div>
               <Dialog open={isStoreDialogOpen} onOpenChange={setIsStoreDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="border-orange-300 hover:bg-orange-100 bg-transparent">
+                  <Button
+                    variant="outline"
+                    className="border-orange-300 hover:bg-orange-100 dark:border-orange-700 dark:hover:bg-orange-900/50 bg-transparent"
+                  >
                     <Store className="h-4 w-4 mr-2" />
-                    Store Settings
+                    {t("dashboard.storeSettings.button")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle>Store Settings</DialogTitle>
-                    <DialogDescription>Customize your store appearance</DialogDescription>
+                    <DialogTitle>{t("dashboard.storeSettings.title")}</DialogTitle>
+                    <DialogDescription>{t("dashboard.storeSettings.description")}</DialogDescription>
                   </DialogHeader>
                   <form onSubmit={handleSaveStore}>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="store_name">Store Name</Label>
+                        <Label htmlFor="store_name">{t("dashboard.storeSettings.storeName")}</Label>
                         <Input
                           id="store_name"
                           value={storeData.store_name}
@@ -629,7 +639,7 @@ export default function DashboardContent({
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="store_logo">Store Logo</Label>
+                        <Label htmlFor="store_logo">{t("dashboard.storeSettings.storeLogo")}</Label>
                         <div className="flex items-center gap-4">
                           {storeData.store_logo_url && (
                             <img
@@ -646,12 +656,16 @@ export default function DashboardContent({
                               onChange={handleLogoUpload}
                               disabled={isUploading}
                             />
-                            {isUploading && <p className="text-xs text-slate-500 mt-1">Uploading...</p>}
+                            {isUploading && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {t("dashboard.storeSettings.uploading")}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="store_cover">Store Cover Image</Label>
+                        <Label htmlFor="store_cover">{t("dashboard.storeSettings.storeCover")}</Label>
                         <div className="space-y-4">
                           {storeData.store_cover_url && (
                             <div className="relative w-full h-32 rounded-lg overflow-hidden border">
@@ -670,14 +684,16 @@ export default function DashboardContent({
                               onChange={handleCoverUpload}
                               disabled={isUploading}
                             />
-                            <p className="text-xs text-slate-500 mt-1">Recommended size: 1920x400px for best results</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {t("dashboard.storeSettings.recommendedSize")}
+                            </p>
                           </div>
                         </div>
                       </div>
                     </div>
                     <DialogFooter>
                       <Button type="submit" disabled={isLoading}>
-                        {isLoading ? "Saving..." : "Save Settings"}
+                        {isLoading ? t("dashboard.storeSettings.saving") : t("dashboard.storeSettings.saveButton")}
                       </Button>
                     </DialogFooter>
                   </form>
@@ -688,15 +704,15 @@ export default function DashboardContent({
           <CardContent>
             <div className="flex items-center gap-2">
               <Input
+                value={`${window.location.origin}/store/${storeData.store_slug || userId}`}
                 readOnly
-                value={`${typeof window !== "undefined" ? window.location.origin : ""}/store/${profile.store_slug || userId}`}
-                className="bg-white"
+                className="flex-1 bg-white dark:bg-slate-800"
               />
               <Button onClick={copyStoreUrl} variant="outline" size="icon">
                 {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
               </Button>
               <Button
-                onClick={() => window.open(`/store/${profile.store_slug || userId}`, "_blank")}
+                onClick={() => window.open(`/store/${storeData.store_slug || userId}`, "_blank")}
                 variant="outline"
                 size="icon"
               >
@@ -708,10 +724,10 @@ export default function DashboardContent({
 
         <Tabs defaultValue="products" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="products">{t("dashboard.tabs.products")}</TabsTrigger>
             <TabsTrigger value="orders" className="relative">
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Orders
+              {t("dashboard.tabs.orders")}
               {orders.filter((o) => o.status === "pending").length > 0 && (
                 <Badge className="ml-2 bg-red-500 text-white h-5 w-5 p-0 flex items-center justify-center rounded-full">
                   {orders.filter((o) => o.status === "pending").length}
@@ -725,59 +741,60 @@ export default function DashboardContent({
             <div className="grid gap-4 md:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-700">Total Products</CardTitle>
-                  <Package className="h-4 w-4 text-slate-600" />
+                  <CardTitle className="text-sm font-medium">{t("dashboard.stats.totalProducts")}</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-slate-900">{products.length}</div>
+                  <div className="text-2xl font-bold">{products.length}</div>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.stats.listedMarketplace")}</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-700">Average Price</CardTitle>
-                  <DollarSign className="h-4 w-4 text-slate-600" />
+                  <CardTitle className="text-sm font-medium">{t("dashboard.stats.avgPrice")}</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-slate-900">
+                  <div className="text-2xl font-bold">
                     {products.length > 0
-                      ? (products.reduce((acc, p) => acc + Number.parseFloat(p.price), 0) / products.length).toFixed(2)
+                      ? (products.reduce((sum, p) => sum + Number.parseFloat(p.price), 0) / products.length).toFixed(2)
                       : "0.00"}{" "}
-                    MAD
+                    {t("common.currency")}
                   </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-700">Total Value</CardTitle>
-                  <DollarSign className="h-4 w-4 text-slate-600" />
+                  <CardTitle className="text-sm font-medium">{t("dashboard.stats.totalValue")}</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-slate-900">
-                    {products.reduce((acc, p) => acc + Number.parseFloat(p.price), 0).toFixed(2)} MAD
+                  <div className="text-2xl font-bold">
+                    {products.reduce((sum, p) => sum + Number.parseFloat(p.price) * p.stock, 0).toFixed(2)}{" "}
+                    {t("common.currency")}
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Products Section */}
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-slate-900">Your Products</h2>
+              <h2 className="text-xl font-semibold">{t("dashboard.yourProducts")}</h2>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Product
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    {t("dashboard.addProduct")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle>Add New Product</DialogTitle>
+                    <DialogTitle>{t("dashboard.addProduct")}</DialogTitle>
                     <DialogDescription>Create a new product listing for your store</DialogDescription>
                   </DialogHeader>
                   <form onSubmit={handleAddProduct}>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="name">Product Name</Label>
+                        <Label htmlFor="name">{t("dashboard.product.name")}</Label>
                         <Input
                           id="name"
                           required
@@ -786,7 +803,7 @@ export default function DashboardContent({
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="description">Description</Label>
+                        <Label htmlFor="description">{t("dashboard.product.description")}</Label>
                         <Textarea
                           id="description"
                           value={formData.description}
@@ -794,9 +811,9 @@ export default function DashboardContent({
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="category">Category</Label>
+                        <Label htmlFor="category">{t("dashboard.product.category")}</Label>
                         <Select
-                          value={formData.category}
+                          value={formData.category || ""}
                           onValueChange={(value) => setFormData({ ...formData, category: value })}
                         >
                           <SelectTrigger>
@@ -813,17 +830,17 @@ export default function DashboardContent({
                         </Select>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="city">City</Label>
+                        <Label htmlFor="city">{t("dashboard.product.city")}</Label>
                         <Input
                           id="city"
-                          value={formData.city}
+                          value={formData.city || ""}
                           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                           placeholder="e.g., Casablanca, Rabat, Marrakech"
                         />
-                        <p className="text-xs text-slate-500">Enter your city to help buyers find local products</p>
+                        <p className="text-xs text-muted-foreground">{t("dashboard.product.cityHelper")}</p>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="price">Price (MAD)</Label>
+                        <Label htmlFor="price">{t("dashboard.product.price")}</Label>
                         <Input
                           id="price"
                           type="number"
@@ -833,10 +850,10 @@ export default function DashboardContent({
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                           placeholder="e.g., 150.00"
                         />
-                        <p className="text-xs text-slate-500">Enter price in Moroccan Dirham (MAD)</p>
+                        <p className="text-xs text-muted-foreground">{t("dashboard.product.priceHelper")}</p>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="stock">Stock Quantity</Label>
+                        <Label htmlFor="stock">{t("dashboard.product.stock")}</Label>
                         <Input
                           id="stock"
                           type="number"
@@ -846,7 +863,7 @@ export default function DashboardContent({
                         />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="image">Product Image</Label>
+                        <Label htmlFor="image">{t("dashboard.product.image")}</Label>
                         <div className="space-y-2">
                           {formData.image_url && (
                             <img
@@ -864,15 +881,17 @@ export default function DashboardContent({
                               disabled={isUploading}
                               className="flex-1"
                             />
-                            <Upload className="h-4 w-4 self-center text-slate-500" />
+                            <Upload className="h-4 w-4 self-center text-muted-foreground" />
                           </div>
-                          {isUploading && <p className="text-xs text-slate-500">Uploading image...</p>}
+                          {isUploading && (
+                            <p className="text-xs text-muted-foreground">{t("dashboard.product.uploading")}</p>
+                          )}
                         </div>
                       </div>
                     </div>
                     <DialogFooter>
                       <Button type="submit" disabled={isLoading || isUploading}>
-                        {isLoading ? "Adding..." : "Add Product"}
+                        {isLoading ? t("dashboard.product.adding") : t("dashboard.product.addButton")}
                       </Button>
                     </DialogFooter>
                   </form>
@@ -884,8 +903,8 @@ export default function DashboardContent({
             {products.length === 0 ? (
               <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12">
-                  <Package className="h-12 w-12 text-slate-400 mb-4" />
-                  <p className="text-slate-600 text-center">No products yet. Start by adding your first product!</p>
+                  <Package className="h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground text-center">{t("dashboard.noProducts")}</p>
                 </CardContent>
               </Card>
             ) : (
@@ -893,7 +912,7 @@ export default function DashboardContent({
                 {products.map((product) => (
                   <Card key={product.id} className="overflow-hidden">
                     {product.image_url && (
-                      <div className="aspect-video w-full bg-slate-200">
+                      <div className="aspect-video w-full bg-muted">
                         <img
                           src={product.image_url || "/placeholder.svg"}
                           alt={product.name}
@@ -923,13 +942,14 @@ export default function DashboardContent({
                     </CardHeader>
                     <CardContent>
                       <div className="mb-3">
-                        <span className="text-sm text-slate-600">
-                          Stock: <span className="font-semibold">{product.stock}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {t("dashboard.product.stock")}:{" "}
+                          <span className="font-semibold text-card-foreground">{product.stock}</span>
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-slate-900">
-                          {Number.parseFloat(product.price).toFixed(2)} MAD
+                        <span className="text-2xl font-bold text-card-foreground">
+                          {Number.parseFloat(product.price).toFixed(2)} {t("common.currency")}
                         </span>
                         <div className="flex gap-2">
                           <Dialog
@@ -946,15 +966,15 @@ export default function DashboardContent({
                                 <Pencil className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-h-[90vh] overflow-y-auto">
+                            <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
                               <DialogHeader>
-                                <DialogTitle>Edit Product</DialogTitle>
+                                <DialogTitle>{t("dashboard.product.editTitle")}</DialogTitle>
                                 <DialogDescription>Update your product details</DialogDescription>
                               </DialogHeader>
                               <form onSubmit={handleEditProduct}>
                                 <div className="grid gap-4 py-4">
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_name">Product Name</Label>
+                                    <Label htmlFor="edit_name">{t("dashboard.product.name")}</Label>
                                     <Input
                                       id="edit_name"
                                       required
@@ -963,7 +983,7 @@ export default function DashboardContent({
                                     />
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_description">Description</Label>
+                                    <Label htmlFor="edit_description">{t("dashboard.product.description")}</Label>
                                     <Textarea
                                       id="edit_description"
                                       value={formData.description}
@@ -971,9 +991,9 @@ export default function DashboardContent({
                                     />
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_category">Category</Label>
+                                    <Label htmlFor="edit_category">{t("dashboard.product.category")}</Label>
                                     <Select
-                                      value={formData.category}
+                                      value={formData.category || ""}
                                       onValueChange={(value) => setFormData({ ...formData, category: value })}
                                     >
                                       <SelectTrigger>
@@ -990,19 +1010,17 @@ export default function DashboardContent({
                                     </Select>
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_city">City</Label>
+                                    <Label htmlFor="edit_city">{t("dashboard.product.city")}</Label>
                                     <Input
                                       id="edit_city"
-                                      value={formData.city}
+                                      value={formData.city || ""}
                                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                                       placeholder="e.g., Casablanca, Rabat, Marrakech"
                                     />
-                                    <p className="text-xs text-slate-500">
-                                      Enter your city to help buyers find local products
-                                    </p>
+                                    <p className="text-xs text-muted-foreground">{t("dashboard.product.cityHelper")}</p>
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_price">Price (MAD)</Label>
+                                    <Label htmlFor="edit_price">{t("dashboard.product.price")}</Label>
                                     <Input
                                       id="edit_price"
                                       type="number"
@@ -1011,9 +1029,12 @@ export default function DashboardContent({
                                       value={formData.price}
                                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                     />
+                                    <p className="text-xs text-muted-foreground">
+                                      {t("dashboard.product.priceHelper")}
+                                    </p>
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_stock">Stock Quantity</Label>
+                                    <Label htmlFor="edit_stock">{t("dashboard.product.stock")}</Label>
                                     <Input
                                       id="edit_stock"
                                       type="number"
@@ -1023,7 +1044,7 @@ export default function DashboardContent({
                                     />
                                   </div>
                                   <div className="grid gap-2">
-                                    <Label htmlFor="edit_image">Product Image</Label>
+                                    <Label htmlFor="edit_image">{t("dashboard.product.image")}</Label>
                                     <div className="space-y-2">
                                       {formData.image_url && (
                                         <img
@@ -1041,15 +1062,19 @@ export default function DashboardContent({
                                           disabled={isUploading}
                                           className="flex-1"
                                         />
-                                        <Upload className="h-4 w-4 self-center text-slate-500" />
+                                        <Upload className="h-4 w-4 self-center text-muted-foreground" />
                                       </div>
-                                      {isUploading && <p className="text-xs text-slate-500">Uploading image...</p>}
+                                      {isUploading && (
+                                        <p className="text-xs text-muted-foreground">
+                                          {t("dashboard.product.uploading")}
+                                        </p>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
                                 <DialogFooter>
                                   <Button type="submit" disabled={isLoading || isUploading}>
-                                    {isLoading ? "Saving..." : "Save Changes"}
+                                    {isLoading ? t("dashboard.product.saving") : t("dashboard.product.saveChanges")}
                                   </Button>
                                 </DialogFooter>
                               </form>
@@ -1077,17 +1102,17 @@ export default function DashboardContent({
 
           <TabsContent value="orders" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-slate-900">Customer Orders</h2>
-              <Badge variant="outline">{orders.length} Total Orders</Badge>
+              <h2 className="text-xl font-semibold">{t("dashboard.orders.title")}</h2>
+              <Badge variant="outline">
+                {orders.length} {t("dashboard.orders.totalOrders")}
+              </Badge>
             </div>
 
             {orders.length === 0 ? (
               <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12">
-                  <ShoppingCart className="h-12 w-12 text-slate-400 mb-4" />
-                  <p className="text-slate-600 text-center">
-                    No orders yet. Orders will appear here when customers make purchases.
-                  </p>
+                  <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground text-center">{t("dashboard.orders.noOrders")}</p>
                 </CardContent>
               </Card>
             ) : (
@@ -1109,7 +1134,7 @@ export default function DashboardContent({
                             <CardDescription className="mt-1">
                               <div className="space-y-1 text-sm">
                                 <p>
-                                  <strong>Customer:</strong> {order.buyer_name}
+                                  <strong>{t("dashboard.orders.customer")}:</strong> {order.buyer_name}
                                 </p>
                                 <p>
                                   <strong>Email:</strong> {order.buyer_email}
@@ -1118,13 +1143,14 @@ export default function DashboardContent({
                                   <strong>Phone:</strong> {order.buyer_phone}
                                 </p>
                                 <p>
-                                  <strong>Quantity:</strong> {order.quantity}
+                                  <strong>{t("dashboard.orders.quantity")}:</strong> {order.quantity}
                                 </p>
                                 <p>
-                                  <strong>Total:</strong> {Number.parseFloat(order.total_price).toFixed(2)} MAD
+                                  <strong>{t("dashboard.orders.total")}:</strong>{" "}
+                                  {Number.parseFloat(order.total_price).toFixed(2)} {t("common.currency")}
                                 </p>
                                 <p>
-                                  <strong>Payment:</strong> {order.payment_method.toUpperCase()}
+                                  <strong>{t("dashboard.orders.payment")}:</strong> {order.payment_method.toUpperCase()}
                                 </p>
                               </div>
                             </CardDescription>
@@ -1132,20 +1158,22 @@ export default function DashboardContent({
                         </div>
                         <div className="flex flex-col items-end gap-2">
                           {getStatusBadge(order.status)}
-                          <p className="text-xs text-slate-500">{new Date(order.created_at).toLocaleDateString()}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(order.created_at).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
-                        <div className="bg-slate-50 p-3 rounded-lg">
-                          <p className="text-sm font-medium text-slate-700">Delivery Address:</p>
-                          <p className="text-sm text-slate-600 whitespace-pre-wrap">{order.buyer_address}</p>
+                        <div className="bg-muted p-3 rounded-lg">
+                          <p className="text-sm font-medium">{t("dashboard.orders.deliveryAddress")}:</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{order.buyer_address}</p>
                         </div>
                         {order.notes && (
-                          <div className="bg-slate-50 p-3 rounded-lg">
-                            <p className="text-sm font-medium text-slate-700">Notes:</p>
-                            <p className="text-sm text-slate-600">{order.notes}</p>
+                          <div className="bg-muted p-3 rounded-lg">
+                            <p className="text-sm font-medium">{t("dashboard.orders.notes")}:</p>
+                            <p className="text-sm text-muted-foreground">{order.notes}</p>
                           </div>
                         )}
                         <div className="flex gap-2 pt-2">
@@ -1157,7 +1185,7 @@ export default function DashboardContent({
                                 onClick={() => handleOrderAction(order.id, "approved")}
                               >
                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                Accept Order
+                                {t("dashboard.orders.acceptOrder")}
                               </Button>
                               <Button
                                 size="sm"
@@ -1166,7 +1194,7 @@ export default function DashboardContent({
                                 onClick={() => handleOrderAction(order.id, "refused")}
                               >
                                 <XCircle className="h-4 w-4 mr-2" />
-                                Refuse
+                                {t("dashboard.orders.refuse")}
                               </Button>
                             </>
                           )}
@@ -1177,7 +1205,7 @@ export default function DashboardContent({
                               onClick={() => handleOrderAction(order.id, "completed")}
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
-                              Mark as Completed
+                              {t("dashboard.orders.markCompleted")}
                             </Button>
                           )}
                           <Button
@@ -1190,7 +1218,7 @@ export default function DashboardContent({
                             }}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            {t("dashboard.orders.delete")}
                           </Button>
                         </div>
                       </div>

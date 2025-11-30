@@ -1,5 +1,7 @@
 "use client"
 
+import { DialogTrigger } from "@/components/ui/dialog"
+
 import type React from "react"
 
 import { useState, useEffect } from "react"
@@ -13,7 +15,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -34,11 +35,15 @@ import {
   CheckCircle,
   XCircle,
   BarChart3,
+  ExternalLink,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
+import { put } from "@vercel/blob"
+import { useToast } from "@/hooks/use-toast"
 
 type Product = {
   id: string
@@ -98,6 +103,7 @@ export default function DashboardContent({
   const [isUploading, setIsUploading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -175,38 +181,40 @@ export default function DashboardContent({
       "image/bmp",
     ]
     if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
-      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)",
+        variant: "destructive",
+      })
       return
     }
 
     // Check file size (5MB limit)
     const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) {
-      alert("File size must be less than 5MB")
+      toast({
+        title: "File size too large",
+        description: "File size must be less than 5MB",
+        variant: "destructive",
+      })
       return
     }
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const { url } = await put(file.name, file)
+      setFormData((prev) => ({ ...prev, image_url: url }))
+      toast({
+        title: "Image uploaded successfully!",
+        variant: "default",
       })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Upload failed")
-      }
-
-      const data = await response.json()
-      setFormData((prev) => ({ ...prev, image_url: data.url }))
-      alert("Image uploaded successfully!")
     } catch (error) {
       console.error("[v0] Error uploading image:", error)
-      alert(`Failed to upload image: ${error instanceof Error ? error.message : "Unknown error"}`)
+      toast({
+        title: "Failed to upload image",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive",
+      })
     } finally {
       setIsUploading(false)
     }
@@ -227,38 +235,40 @@ export default function DashboardContent({
       "image/bmp",
     ]
     if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
-      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)",
+        variant: "destructive",
+      })
       return
     }
 
     // Check file size (5MB limit)
     const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) {
-      alert("File size must be less than 5MB")
+      toast({
+        title: "File size too large",
+        description: "File size must be less than 5MB",
+        variant: "destructive",
+      })
       return
     }
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const { url } = await put(file.name, file)
+      setStoreData((prev) => ({ ...prev, store_logo_url: url }))
+      toast({
+        title: "Logo uploaded successfully!",
+        variant: "default",
       })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Upload failed")
-      }
-
-      const data = await response.json()
-      setStoreData((prev) => ({ ...prev, store_logo_url: data.url }))
-      alert("Logo uploaded successfully!")
     } catch (error) {
       console.error("[v0] Error uploading logo:", error)
-      alert(`Failed to upload logo: ${error instanceof Error ? error.message : "Unknown error"}`)
+      toast({
+        title: "Failed to upload logo",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive",
+      })
     } finally {
       setIsUploading(false)
     }
@@ -283,28 +293,53 @@ export default function DashboardContent({
     setIsLoading(true)
 
     try {
+      console.log("[v0] Attempting to save store settings:", {
+        userId,
+        store_name: storeData.store_name,
+        store_logo_url: storeData.store_logo_url ? "present" : "empty",
+        store_cover_url: storeData.store_cover_url ? "present" : "empty",
+      })
+
       if (!storeData.store_name.trim()) {
-        alert("Store name is required")
+        toast({
+          title: "Store name is required",
+          variant: "destructive",
+        })
+        setIsLoading(false)
         return
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .update({
-          store_name: storeData.store_name,
-          store_logo_url: storeData.store_logo_url,
-          store_cover_url: storeData.store_cover_url,
+          store_name: storeData.store_name.trim(),
+          store_logo_url: storeData.store_logo_url || null,
+          store_cover_url: storeData.store_cover_url || null,
         })
         .eq("id", userId)
+        .select()
 
-      if (error) throw error
+      console.log("[v0] Supabase update result:", { data, error })
+
+      if (error) {
+        console.error("[v0] Supabase error details:", error)
+        throw error
+      }
 
       setIsStoreDialogOpen(false)
-      alert("✅ Store settings saved successfully!")
-      router.refresh()
+      toast({
+        title: "Store settings saved successfully!",
+        variant: "default",
+      })
+
+      window.location.reload()
     } catch (error) {
-      console.error("Error saving store:", error)
-      alert("❌ Failed to save store settings. Please try again.")
+      console.error("[v0] Error saving store:", error)
+      toast({
+        title: "Failed to save store settings",
+        description: error instanceof Error ? error.message : "Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -322,11 +357,17 @@ export default function DashboardContent({
     setIsLoading(true)
     try {
       if (!formData.name.trim()) {
-        alert("Product name is required")
+        toast({
+          title: "Product name is required",
+          variant: "destructive",
+        })
         return
       }
       if (Number.parseFloat(formData.price) <= 0) {
-        alert("Price must be greater than 0")
+        toast({
+          title: "Price must be greater than 0",
+          variant: "destructive",
+        })
         return
       }
 
@@ -350,10 +391,17 @@ export default function DashboardContent({
       setProducts([...products, data[0]])
       setIsAddDialogOpen(false)
       resetForm()
-      alert("✅ Product added successfully!")
+      toast({
+        title: "Product added successfully!",
+        variant: "default",
+      })
     } catch (error) {
       console.error("Error adding product:", error)
-      alert("❌ Failed to add product. Please try again.")
+      toast({
+        title: "Failed to add product",
+        description: "Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -366,11 +414,17 @@ export default function DashboardContent({
     setIsLoading(true)
     try {
       if (!formData.name.trim()) {
-        alert("Product name is required")
+        toast({
+          title: "Product name is required",
+          variant: "destructive",
+        })
         return
       }
       if (Number.parseFloat(formData.price) <= 0) {
-        alert("Price must be greater than 0")
+        toast({
+          title: "Price must be greater than 0",
+          variant: "destructive",
+        })
         return
       }
 
@@ -392,10 +446,17 @@ export default function DashboardContent({
       setProducts(products.map((p) => (p.id === editingProduct.id ? data[0] : p)))
       setEditingProduct(null)
       resetForm()
-      alert("✅ Product updated successfully!")
+      toast({
+        title: "Product updated successfully!",
+        variant: "default",
+      })
     } catch (error) {
       console.error("Error updating product:", error)
-      alert("❌ Failed to update product. Please try again.")
+      toast({
+        title: "Failed to update product",
+        description: "Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -412,10 +473,17 @@ export default function DashboardContent({
       if (error) throw error
 
       setProducts(products.filter((p) => p.id !== productId))
-      alert("✅ Product deleted successfully!")
+      toast({
+        title: "Product deleted successfully!",
+        variant: "default",
+      })
     } catch (error) {
       console.error("Error deleting product:", error)
-      alert("❌ Failed to delete product. Please try again.")
+      toast({
+        title: "Failed to delete product",
+        description: "Please try again.",
+        variant: "destructive",
+      })
     }
   }
 
@@ -456,44 +524,42 @@ export default function DashboardContent({
       "image/bmp",
     ]
     if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
-      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)",
+        variant: "destructive",
+      })
       return
     }
 
     // Check file size (5MB limit)
     const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) {
-      alert("File size must be less than 5MB")
+      toast({
+        title: "File size too large",
+        description: "File size must be less than 5MB",
+        variant: "destructive",
+      })
       return
     }
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Upload failed")
-      }
-
-      const data = await response.json()
-      setStoreData({ ...storeData, store_cover_url: data.url })
+      const { url } = await put(file.name, file)
+      setStoreData({ ...storeData, store_cover_url: url })
     } catch (error) {
       console.error("Error uploading cover:", error)
-      alert("Failed to upload cover image")
+      toast({
+        title: "Failed to upload cover image",
+        variant: "destructive",
+      })
     } finally {
       setIsUploading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="border-b border-slate-200 bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -511,6 +577,7 @@ export default function DashboardContent({
             </div>
           </div>
           <div className="flex gap-2">
+            <LanguageThemeSwitcher />
             <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2 bg-transparent">
               <BarChart3 className="h-4 w-4" />
               Admin Analytics
@@ -631,6 +698,13 @@ export default function DashboardContent({
               />
               <Button onClick={copyStoreUrl} variant="outline" size="icon">
                 {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+              </Button>
+              <Button
+                onClick={() => window.open(`/store/${profile.store_slug || userId}`, "_blank")}
+                variant="outline"
+                size="icon"
+              >
+                <ExternalLink className="h-4 w-4" />
               </Button>
             </div>
           </CardContent>

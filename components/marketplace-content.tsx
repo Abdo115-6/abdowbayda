@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Search, LogOut, Package, Grid3x3, List, ShoppingCart, Store, Star, Home, ChevronRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
 
 type Product = {
   id: string
@@ -120,6 +121,7 @@ export default function MarketplaceContent({
               </nav>
             </div>
             <div className="flex items-center gap-3">
+              <LanguageThemeSwitcher />
               {userRole === "seller" && (
                 <Button onClick={handleBackToDashboard} variant="outline" className="gap-2 bg-transparent">
                   <Store className="h-4 w-4" />

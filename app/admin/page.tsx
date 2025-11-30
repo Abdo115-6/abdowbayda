@@ -48,12 +48,15 @@ export default async function AdminPage() {
     `)
     .order("created_at", { ascending: false })
 
+  const { data: siteSettings } = await supabase.from("site_settings").select("*").single()
+
   return (
     <AdminAnalytics
       profiles={allProfiles || []}
       products={allProducts || []}
       orders={allOrders || []}
       currentUserEmail={user.email || ""}
+      siteSettings={siteSettings || null}
     />
   )
 }

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import MarketplaceContent from "@/components/marketplace-content"
 
 export default async function MarketplacePage() {
@@ -10,20 +11,41 @@ export default async function MarketplacePage() {
   } = await supabase.auth.getUser()
 
   if (error || !user) {
-    return <MarketplaceContent initialProducts={[]} userEmail="" userRole={null} />
+    const { data: siteSettings } = await supabase.from("site_settings").select("*").single()
+    return (
+      <MarketplaceContent
+        initialProducts={[]}
+        userEmail=""
+        userRole={null}
+        heroImage={siteSettings?.marketplace_hero_image || null}
+      />
+    )
   }
 
-  // Get user profile to check role
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  // Get user profile to check role and ban status
+  const { data: profile } = await supabase.from("profiles").select("role, is_banned").eq("id", user.id).single()
+
+  if (profile?.is_banned) {
+    await supabase.auth.signOut()
+    redirect("/auth/login?banned=true")
+  }
 
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("id, name, description, price, image_url, category, created_at, seller_id")
+    .select("id, name, description, price, image_url, category, city, created_at, seller_id")
     .order("created_at", { ascending: false })
 
   if (productsError) {
     console.error("[v0] Error fetching products:", productsError)
-    return <MarketplaceContent initialProducts={[]} userEmail={user.email || ""} userRole={profile?.role || null} />
+    const { data: siteSettings } = await supabase.from("site_settings").select("*").single()
+    return (
+      <MarketplaceContent
+        initialProducts={[]}
+        userEmail={user.email || ""}
+        userRole={profile?.role || null}
+        heroImage={siteSettings?.marketplace_hero_image || null}
+      />
+    )
   }
 
   console.log("[v0] Products fetched:", products?.length || 0)
@@ -61,11 +83,14 @@ export default async function MarketplacePage() {
 
   console.log("[v0] Final products with profiles:", productsWithProfiles.length)
 
+  const { data: siteSettings } = await supabase.from("site_settings").select("*").single()
+
   return (
     <MarketplaceContent
       initialProducts={productsWithProfiles}
       userEmail={user.email || ""}
       userRole={profile?.role || null}
+      heroImage={siteSettings?.marketplace_hero_image || null}
     />
   )
 }

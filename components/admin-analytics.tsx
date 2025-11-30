@@ -8,8 +8,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Users, ShoppingBag, DollarSign, Package, Crown, ArrowLeft } from "lucide-react"
+import {
+  Search,
+  Users,
+  ShoppingBag,
+  DollarSign,
+  Package,
+  Crown,
+  ArrowLeft,
+  Upload,
+  Ban,
+  UserCheck,
+  Settings,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 
 type Profile = {
   id: string
@@ -18,6 +31,7 @@ type Profile = {
   store_name: string | null
   store_slug: string | null
   created_at: string
+  is_banned?: boolean
 }
 
 type Product = {
@@ -65,15 +79,25 @@ type AdminAnalyticsProps = {
   products: Product[]
   orders: Order[]
   currentUserEmail: string
+  siteSettings: { id: string; marketplace_hero_image: string; updated_at: string } | null
 }
 
-export default function AdminAnalytics({ profiles, products, orders, currentUserEmail }: AdminAnalyticsProps) {
+export default function AdminAnalytics({
+  profiles,
+  products,
+  orders,
+  currentUserEmail,
+  siteSettings,
+}: AdminAnalyticsProps) {
   const router = useRouter()
+  const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState<string>("all")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const [backgroundImage, setBackgroundImage] = useState<File | null>(null)
+  const [isUploadingBackground, setIsUploadingBackground] = useState(false)
+  const [banningUserId, setBanningUserId] = useState<string | null>(null)
 
-  // Calculate analytics
   const analytics = useMemo(() => {
     const totalUsers = profiles.length
     const sellers = profiles.filter((p) => p.role === "seller")
@@ -82,7 +106,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
     const totalOrders = orders.length
     const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_price), 0)
 
-    // Calculate product performance
     const productSales = orders.reduce(
       (acc, order) => {
         if (!acc[order.product_id]) {
@@ -108,7 +131,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
       .sort((a: any, b: any) => b.totalRevenue - a.totalRevenue)
       .slice(0, 10)
 
-    // Calculate seller performance
     const sellerStats = sellers
       .map((seller) => {
         const sellerProducts = products.filter((p) => p.seller_id === seller.id)
@@ -140,7 +162,77 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
     }
   }, [profiles, products, orders])
 
-  // Filter users
+  const handleBackgroundUpload = async () => {
+    if (!backgroundImage) return
+
+    setIsUploadingBackground(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", backgroundImage)
+
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!uploadResponse.ok) throw new Error("Failed to upload image")
+
+      const { url } = await uploadResponse.json()
+
+      const response = await fetch("/api/admin/update-background", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: url }),
+      })
+
+      if (!response.ok) throw new Error("Failed to update background")
+
+      toast({
+        title: "Success",
+        description: "Marketplace background updated successfully!",
+      })
+
+      router.refresh()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update background. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsUploadingBackground(false)
+      setBackgroundImage(null)
+    }
+  }
+
+  const handleToggleBan = async (userId: string, currentBanStatus: boolean) => {
+    setBanningUserId(userId)
+    try {
+      const response = await fetch("/api/admin/ban-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, isBanned: !currentBanStatus }),
+      })
+
+      if (!response.ok) throw new Error("Failed to update user status")
+
+      toast({
+        title: "Success",
+        description: `User ${!currentBanStatus ? "banned" : "unbanned"} successfully!`,
+      })
+
+      router.refresh()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update user status. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setBanningUserId(null)
+    }
+  }
+
   const filteredProfiles = profiles.filter((profile) => {
     const matchesSearch =
       profile.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -149,7 +241,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
     return matchesSearch && matchesRole
   })
 
-  // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
@@ -160,7 +251,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -179,7 +269,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Overview Stats */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -228,7 +317,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
           </Card>
         </div>
 
-        {/* Tabs */}
         <Tabs defaultValue="winning" className="space-y-4">
           <TabsList>
             <TabsTrigger value="winning">Winning Products</TabsTrigger>
@@ -236,9 +324,9 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
             <TabsTrigger value="users">All Users</TabsTrigger>
             <TabsTrigger value="products">All Products</TabsTrigger>
             <TabsTrigger value="orders">All Orders</TabsTrigger>
+            <TabsTrigger value="settings">Site Settings</TabsTrigger>
           </TabsList>
 
-          {/* Winning Products Tab */}
           <TabsContent value="winning" className="space-y-4">
             <Card>
               <CardHeader>
@@ -293,7 +381,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
             </Card>
           </TabsContent>
 
-          {/* Seller Performance Tab */}
           <TabsContent value="sellers" className="space-y-4">
             <Card>
               <CardHeader>
@@ -341,7 +428,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
             </Card>
           </TabsContent>
 
-          {/* All Users Tab */}
           <TabsContent value="users" className="space-y-4">
             <Card>
               <CardHeader>
@@ -378,18 +464,20 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
                       <TableHead>Role</TableHead>
                       <TableHead>Store Name</TableHead>
                       <TableHead>Store Slug</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead>Joined</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredProfiles.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        <TableCell colSpan={7} className="text-center text-muted-foreground">
                           No users found
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredProfiles.map((profile) => (
+                      filteredProfiles.map((profile: any) => (
                         <TableRow key={profile.id}>
                           <TableCell className="font-medium">{profile.email}</TableCell>
                           <TableCell>
@@ -397,7 +485,32 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
                           </TableCell>
                           <TableCell>{profile.store_name || "-"}</TableCell>
                           <TableCell className="text-sm text-muted-foreground">{profile.store_slug || "-"}</TableCell>
+                          <TableCell>
+                            <Badge variant={profile.is_banned ? "destructive" : "default"}>
+                              {profile.is_banned ? "Banned" : "Active"}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-sm">{new Date(profile.created_at).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              size="sm"
+                              variant={profile.is_banned ? "outline" : "destructive"}
+                              onClick={() => handleToggleBan(profile.id, profile.is_banned)}
+                              disabled={banningUserId === profile.id}
+                            >
+                              {profile.is_banned ? (
+                                <>
+                                  <UserCheck className="h-4 w-4 mr-1" />
+                                  Unban
+                                </>
+                              ) : (
+                                <>
+                                  <Ban className="h-4 w-4 mr-1" />
+                                  Ban
+                                </>
+                              )}
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
@@ -407,7 +520,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
             </Card>
           </TabsContent>
 
-          {/* All Products Tab */}
           <TabsContent value="products" className="space-y-4">
             <Card>
               <CardHeader>
@@ -480,7 +592,6 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
             </Card>
           </TabsContent>
 
-          {/* All Orders Tab */}
           <TabsContent value="orders" className="space-y-4">
             <Card>
               <CardHeader>
@@ -538,6 +649,58 @@ export default function AdminAnalytics({ profiles, products, orders, currentUser
                     )}
                   </TableBody>
                 </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  <CardTitle>Site Settings</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">Customize your marketplace appearance</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">Marketplace Hero Background</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Upload a custom background image for the marketplace hero section
+                    </p>
+                  </div>
+
+                  {siteSettings?.marketplace_hero_image && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Current Background</label>
+                      <div className="relative h-40 w-full rounded-lg overflow-hidden border">
+                        <img
+                          src={siteSettings.marketplace_hero_image || "/placeholder.svg"}
+                          alt="Current marketplace background"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Upload New Background</label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setBackgroundImage(e.target.files?.[0] || null)}
+                        className="flex-1"
+                      />
+                      <Button onClick={handleBackgroundUpload} disabled={!backgroundImage || isUploadingBackground}>
+                        <Upload className="h-4 w-4 mr-2" />
+                        {isUploadingBackground ? "Uploading..." : "Upload"}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Recommended size: 1920x400px for best results</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

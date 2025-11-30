@@ -45,10 +45,12 @@ export default function MarketplaceContent({
   initialProducts,
   userEmail,
   userRole,
+  heroImage,
 }: {
   initialProducts: Product[]
   userEmail: string
   userRole: string | null
+  heroImage: string | null
 }) {
   const [products] = useState<Product[]>(initialProducts)
   const [searchQuery, setSearchQuery] = useState("")
@@ -175,7 +177,7 @@ export default function MarketplaceContent({
       <div
         className="relative h-64 bg-cover bg-center"
         style={{
-          backgroundImage: 'url("/images/image.png")',
+          backgroundImage: `url("${heroImage || "/placeholder.svg?height=400&width=1920"}")`,
         }}
       >
         <div className="absolute inset-0 bg-black/40" />

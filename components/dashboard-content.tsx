@@ -164,8 +164,25 @@ export default function DashboardContent({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file (JPG, PNG, GIF, etc.)")
+    // Accept all common image formats
+    const validImageTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+      "image/bmp",
+    ]
+    if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
+      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      return
+    }
+
+    // Check file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      alert("File size must be less than 5MB")
       return
     }
 
@@ -199,8 +216,25 @@ export default function DashboardContent({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file (JPG, PNG, GIF, etc.)")
+    // Accept all common image formats
+    const validImageTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+      "image/bmp",
+    ]
+    if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
+      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      return
+    }
+
+    // Check file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      alert("File size must be less than 5MB")
       return
     }
 
@@ -411,18 +445,45 @@ export default function DashboardContent({
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Accept all common image formats
+    const validImageTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "image/svg+xml",
+      "image/bmp",
+    ]
+    if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
+      alert("Please select a valid image file (JPG, JPEG, PNG, GIF, WebP, SVG, BMP)")
+      return
+    }
+
+    // Check file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      alert("File size must be less than 5MB")
+      return
+    }
+
+    setIsUploading(true)
     try {
-      setIsUploading(true)
-      const fileExt = file.name.split(".").pop()
-      const fileName = `store-cover-${userId}-${Date.now()}.${fileExt}`
+      const formData = new FormData()
+      formData.append("file", file)
 
-      const { data, error } = await supabase.storage.from("store-assets").upload(fileName, file)
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Upload failed")
+      }
 
-      const { data: publicUrlData } = supabase.storage.from("store-assets").getPublicUrl(fileName)
-
-      setStoreData({ ...storeData, store_cover_url: publicUrlData.publicUrl })
+      const data = await response.json()
+      setStoreData({ ...storeData, store_cover_url: data.url })
     } catch (error) {
       console.error("Error uploading cover:", error)
       alert("Failed to upload cover image")

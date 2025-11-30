@@ -14,8 +14,14 @@ export default async function AdminPage() {
     redirect("/auth/login")
   }
 
+  const { data: profile } = await supabase.from("profiles").select("role, email, is_admin").eq("id", user.id).single()
+
+  if (!profile?.is_admin) {
+    redirect("/marketplace")
+  }
+
   // Get current user profile
-  const { data: profile } = await supabase.from("profiles").select("role, email").eq("id", user.id).single()
+  // const { data: profile } = await supabase.from("profiles").select("role, email").eq("id", user.id).single()
 
   // For now, any logged-in user can access analytics
   // You can add admin role check here if needed

@@ -22,11 +22,13 @@ type Product = {
 export default function StoreView({
   storeName,
   storeLogo,
+  storeCover,
   products,
   sellerId,
 }: {
   storeName: string
   storeLogo: string | null
+  storeCover: string | null
   products: Product[]
   sellerId: string
 }) {
@@ -57,7 +59,7 @@ export default function StoreView({
       <div
         className="relative h-64 bg-gradient-to-r from-orange-400 to-amber-500 flex items-center justify-center"
         style={{
-          backgroundImage: "url('/images/image.png')",
+          backgroundImage: storeCover ? `url('${storeCover}')` : "url('/images/image.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

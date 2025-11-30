@@ -11,7 +11,7 @@ export default async function StorePage({ params }: { params: { slug: string } }
   // First, try to find by store_slug
   const { data: profileBySlug } = await supabase
     .from("profiles")
-    .select("id, store_name, store_logo_url, store_slug, role")
+    .select("id, store_name, store_logo_url, store_cover_url, store_slug, role")
     .eq("store_slug", slug)
     .eq("role", "seller")
     .single()
@@ -22,7 +22,7 @@ export default async function StorePage({ params }: { params: { slug: string } }
     // Fallback: try to find by user ID
     const { data: profileById } = await supabase
       .from("profiles")
-      .select("id, store_name, store_logo_url, store_slug, role")
+      .select("id, store_name, store_logo_url, store_cover_url, store_slug, role")
       .eq("id", slug)
       .eq("role", "seller")
       .single()
@@ -46,6 +46,7 @@ export default async function StorePage({ params }: { params: { slug: string } }
     <StoreView
       storeName={profile.store_name || "Store"}
       storeLogo={profile.store_logo_url}
+      storeCover={profile.store_cover_url}
       products={products || []}
       sellerId={profile.id}
     />

@@ -55,6 +55,7 @@ type Profile = {
   store_name: string | null
   store_logo_url: string | null
   store_slug: string | null
+  store_cover_url: string | null
 }
 
 type Order = {
@@ -110,6 +111,7 @@ export default function DashboardContent({
   const [storeData, setStoreData] = useState({
     store_name: profile.store_name || "",
     store_logo_url: profile.store_logo_url || "",
+    store_cover_url: profile.store_cover_url || "",
   })
 
   useEffect(() => {
@@ -257,6 +259,7 @@ export default function DashboardContent({
         .update({
           store_name: storeData.store_name,
           store_logo_url: storeData.store_logo_url,
+          store_cover_url: storeData.store_cover_url,
         })
         .eq("id", userId)
 
@@ -404,6 +407,30 @@ export default function DashboardContent({
     return badges[status as keyof typeof badges] || <Badge>{status}</Badge>
   }
 
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      setIsUploading(true)
+      const fileExt = file.name.split(".").pop()
+      const fileName = `store-cover-${userId}-${Date.now()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from("store-assets").upload(fileName, file)
+
+      if (error) throw error
+
+      const { data: publicUrlData } = supabase.storage.from("store-assets").getPublicUrl(fileName)
+
+      setStoreData({ ...storeData, store_cover_url: publicUrlData.publicUrl })
+    } catch (error) {
+      console.error("Error uploading cover:", error)
+      alert("Failed to upload cover image")
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
@@ -461,7 +488,7 @@ export default function DashboardContent({
                     Store Settings
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>Store Settings</DialogTitle>
                     <DialogDescription>Customize your store appearance</DialogDescription>
@@ -496,6 +523,30 @@ export default function DashboardContent({
                               disabled={isUploading}
                             />
                             {isUploading && <p className="text-xs text-slate-500 mt-1">Uploading...</p>}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="store_cover">Store Cover Image</Label>
+                        <div className="space-y-4">
+                          {storeData.store_cover_url && (
+                            <div className="relative w-full h-32 rounded-lg overflow-hidden border">
+                              <img
+                                src={storeData.store_cover_url || "/placeholder.svg"}
+                                alt="Store Cover Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
+                          <div>
+                            <Input
+                              id="store_cover"
+                              type="file"
+                              accept="image/*"
+                              onChange={handleCoverUpload}
+                              disabled={isUploading}
+                            />
+                            <p className="text-xs text-slate-500 mt-1">Recommended size: 1920x400px for best results</p>
                           </div>
                         </div>
                       </div>

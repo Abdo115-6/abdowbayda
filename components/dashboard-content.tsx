@@ -579,12 +579,14 @@ export default function DashboardContent({
               <p className="text-sm text-muted-foreground">{userEmail}</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <LanguageThemeSwitcher />
-            <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2">
-              <BarChart3 className="h-4 w-4" />
-              {t("dashboard.adminAnalytics")}
-            </Button>
+            {userEmail === "motivationntm@gmail.com" && (
+              <Button variant="outline" onClick={() => router.push("/admin")} className="gap-2">
+                <BarChart3 className="h-4 w-4" />
+                {t("dashboard.adminAnalytics")}
+              </Button>
+            )}
             <Button variant="outline" onClick={handleSwitchToBuyer} className="gap-2 bg-transparent">
               <ShoppingBag className="h-4 w-4" />
               {t("dashboard.browseAsBuyer")}

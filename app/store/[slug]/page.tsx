@@ -6,12 +6,29 @@ export default async function StorePage({ params }: { params: { slug: string } }
   const supabase = await createClient()
   const { slug } = await params
 
-  const { data: profile } = await supabase
+  let profile = null
+
+  // First, try to find by store_slug
+  const { data: profileBySlug } = await supabase
     .from("profiles")
     .select("id, store_name, store_logo_url, store_slug, role")
     .eq("store_slug", slug)
     .eq("role", "seller")
     .single()
+
+  if (profileBySlug) {
+    profile = profileBySlug
+  } else {
+    // Fallback: try to find by user ID
+    const { data: profileById } = await supabase
+      .from("profiles")
+      .select("id, store_name, store_logo_url, store_slug, role")
+      .eq("id", slug)
+      .eq("role", "seller")
+      .single()
+
+    profile = profileById
+  }
 
   if (!profile) {
     notFound()

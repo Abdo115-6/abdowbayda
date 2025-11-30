@@ -265,10 +265,20 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
-        access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Upload failed")
+      }
+
+      const { url } = await response.json()
       setStoreData((prev) => ({ ...prev, store_logo_url: url }))
       toast({
         title: "Logo uploaded successfully!",
@@ -551,10 +561,20 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
-        access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Upload failed")
+      }
+
+      const { url } = await response.json()
       setStoreData((prev) => ({ ...prev, store_cover_url: url }))
       toast({
         title: "Cover image uploaded successfully!",

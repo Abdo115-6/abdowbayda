@@ -57,22 +57,26 @@ export default function StoreView({
     <div className="min-h-screen bg-slate-50">
       {/* Hero Header with Store Info */}
       <div
-        className="relative h-64 bg-gradient-to-r from-orange-400 to-amber-500 flex items-center justify-center"
+        className="relative h-64 flex items-center justify-center"
         style={{
-          backgroundImage: storeCover ? `url('${storeCover}')` : "url('/images/image.png')",
+          backgroundImage: storeCover
+            ? `url('${storeCover}')`
+            : "linear-gradient(to right, rgb(251, 146, 60), rgb(245, 158, 11))",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-white">
-          {storeLogo && (
-            <img
-              src={storeLogo || "/placeholder.svg"}
-              alt={storeName}
-              className="h-20 w-20 rounded-full mx-auto mb-4 border-4 border-white shadow-lg object-cover"
-            />
-          )}
+          <div className="h-24 w-24 rounded-full mx-auto mb-4 border-4 border-white shadow-lg bg-white overflow-hidden">
+            {storeLogo ? (
+              <img src={storeLogo || "/placeholder.svg"} alt={storeName} className="h-full w-full object-cover" />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-amber-500">
+                <span className="text-4xl font-bold text-white">{storeName.charAt(0).toUpperCase()}</span>
+              </div>
+            )}
+          </div>
           <h1 className="text-4xl font-bold mb-2">{storeName}</h1>
           <nav className="text-sm">
             <span className="hover:underline cursor-pointer">Home</span>

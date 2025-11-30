@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
 import { Badge } from "@/components/ui/badge"
+import { useLanguage } from "@/contexts/language-context"
 
 type Product = {
   id: string
@@ -52,6 +53,7 @@ export default function MarketplaceContent({
   userRole: string | null
   heroImage: string | null
 }) {
+  const { t } = useLanguage()
   const [products] = useState<Product[]>(initialProducts)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -110,32 +112,33 @@ export default function MarketplaceContent({
   })
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-10">
+      <header className="border-b bg-background shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
               <button
                 onClick={() => router.push("/marketplace")}
-                className="text-2xl font-bold text-red-600 hover:text-red-700 transition-colors"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
-                FarmEgg
+                <img src="/farmegg-logo.jpg" alt="FarmEgg" className="h-12 w-12 rounded-full object-cover" />
+                <span className="text-2xl font-bold text-primary">FarmEgg</span>
               </button>
               <nav className="hidden md:flex items-center gap-6">
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
-                  Shop
+                <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
+                  {t("nav.marketplace")}
                 </a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
+                <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
                   About
                 </a>
-                <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-colors">
+                <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
                   Contact
                 </a>
                 <Button
                   onClick={() => router.push("/incubator")}
                   variant="ghost"
-                  className="text-slate-700 hover:text-slate-900 font-medium transition-colors"
+                  className="text-foreground/70 hover:text-foreground font-medium transition-colors"
                 >
                   Egg Calculator
                 </Button>
@@ -146,25 +149,25 @@ export default function MarketplaceContent({
               {userRole === "seller" && (
                 <Button onClick={handleBackToDashboard} variant="outline" className="gap-2 bg-transparent">
                   <Store className="h-4 w-4" />
-                  Back to Dashboard
+                  {t("nav.backToDashboard")}
                 </Button>
               )}
               {userEmail && (
                 <>
-                  <span className="hidden sm:inline text-sm text-slate-600">{userEmail}</span>
+                  <span className="hidden sm:inline text-sm text-muted-foreground">{userEmail}</span>
                   <Button onClick={handleLogout} variant="outline" size="sm" className="gap-2 bg-transparent">
                     <LogOut className="h-4 w-4" />
-                    Logout
+                    {t("nav.logout")}
                   </Button>
                 </>
               )}
               {!userEmail && (
                 <>
                   <Button variant="ghost" onClick={() => router.push("/auth/login")}>
-                    Login
+                    {t("nav.login")}
                   </Button>
-                  <Button onClick={() => router.push("/auth/signup")} className="bg-red-600 hover:bg-red-700">
-                    Sign Up
+                  <Button onClick={() => router.push("/auth/signup")} className="bg-primary hover:bg-primary/90">
+                    {t("nav.signup")}
                   </Button>
                 </>
               )}
@@ -182,10 +185,10 @@ export default function MarketplaceContent({
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative container mx-auto px-4 h-full flex flex-col items-center justify-center text-white">
-          <h2 className="text-4xl font-bold mb-2 text-balance">Poultry Products</h2>
+          <h2 className="text-4xl font-bold mb-2 text-balance">{t("marketplace.title")}</h2>
           <div className="flex items-center gap-2 text-sm">
             <Home className="h-4 w-4" />
-            <span>Home</span>
+            <span>{t("nav.home")}</span>
             <ChevronRight className="h-4 w-4" />
             <span className="text-orange-400">Products</span>
           </div>
@@ -194,18 +197,18 @@ export default function MarketplaceContent({
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-6 text-slate-700">
-          <p className="text-lg">Browse fresh chicken and egg products from local farms</p>
+        <div className="mb-6 text-muted-foreground">
+          <p className="text-lg">{t("marketplace.subtitle")}</p>
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6 mb-6">
+        <div className="bg-card border rounded-lg p-6 mb-6">
           <div className="grid md:grid-cols-4 gap-4 mb-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t("marketplace.search")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -214,10 +217,10 @@ export default function MarketplaceContent({
 
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
               <SelectTrigger>
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder={t("marketplace.allCategories")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all">{t("marketplace.allCategories")}</SelectItem>
                 {categories.map((cat) => (
                   <SelectItem key={cat} value={cat || ""}>
                     {cat}
@@ -228,10 +231,10 @@ export default function MarketplaceContent({
 
             <Select value={selectedCity} onValueChange={setSelectedCity}>
               <SelectTrigger>
-                <SelectValue placeholder="All Cities" />
+                <SelectValue placeholder={t("marketplace.allCities")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Cities</SelectItem>
+                <SelectItem value="all">{t("marketplace.allCities")}</SelectItem>
                 {cities.map((city) => (
                   <SelectItem key={city} value={city || ""}>
                     {city}
@@ -242,26 +245,26 @@ export default function MarketplaceContent({
 
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger>
-                <SelectValue placeholder="Sort by" />
+                <SelectValue placeholder={t("marketplace.sort")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectItem value="newest">{t("marketplace.newest")}</SelectItem>
+                <SelectItem value="price-low">{t("marketplace.priceLowHigh")}</SelectItem>
+                <SelectItem value="price-high">{t("marketplace.priceHighLow")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-600">
-              Showing {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+            <p className="text-sm text-muted-foreground">
+              {t("marketplace.showing")} {filteredProducts.length}{" "}
+              {filteredProducts.length === 1 ? t("marketplace.product") : t("marketplace.products")}
             </p>
             <div className="flex gap-2">
               <Button
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="icon"
                 onClick={() => setViewMode("grid")}
-                className={viewMode === "grid" ? "bg-slate-900" : ""}
               >
                 <Grid3x3 className="h-4 w-4" />
               </Button>
@@ -269,7 +272,6 @@ export default function MarketplaceContent({
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="icon"
                 onClick={() => setViewMode("list")}
-                className={viewMode === "list" ? "bg-slate-900" : ""}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -281,11 +283,11 @@ export default function MarketplaceContent({
         {filteredProducts.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Package className="h-12 w-12 text-slate-400 mb-4" />
-              <p className="text-slate-600 text-center">
+              <Package className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground text-center">
                 {searchQuery || selectedCategory !== "all" || selectedCity !== "all"
-                  ? "No products found matching your filters."
-                  : "No products available yet. Check back soon!"}
+                  ? t("marketplace.noMatch")
+                  : t("marketplace.noProducts")}
               </p>
             </CardContent>
           </Card>
@@ -303,8 +305,8 @@ export default function MarketplaceContent({
                 <div
                   className={
                     viewMode === "grid"
-                      ? "aspect-square w-full bg-slate-100 overflow-hidden"
-                      : "w-48 h-48 bg-slate-100 overflow-hidden flex-shrink-0"
+                      ? "aspect-square w-full bg-muted overflow-hidden"
+                      : "w-48 h-48 bg-muted overflow-hidden flex-shrink-0"
                   }
                 >
                   {product.image_url ? (
@@ -315,7 +317,7 @@ export default function MarketplaceContent({
                     />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center">
-                      <Package className="h-16 w-16 text-slate-400" />
+                      <Package className="h-16 w-16 text-muted-foreground" />
                     </div>
                   )}
                 </div>
@@ -330,36 +332,23 @@ export default function MarketplaceContent({
                           className="h-6 w-6 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center">
-                          <Store className="h-3 w-3 text-slate-500" />
+                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center">
+                          <Store className="h-3 w-3 text-muted-foreground" />
                         </div>
                       )}
-                      <span className="text-xs text-red-600 font-medium">
-                        {(() => {
-                          const storeName = product.profiles?.store_name
-                          console.log(
-                            "[v0] Rendering store name for product:",
-                            product.id,
-                            "Store name:",
-                            storeName,
-                            "Full profile:",
-                            product.profiles,
-                          )
-                          return storeName || product.profiles?.id || "Unknown Seller"
-                        })()}
+                      <span className="text-xs text-primary font-medium">
+                        {product.profiles?.store_name || product.profiles?.id || "Unknown Seller"}
                       </span>
                     </div>
 
-                    <CardTitle className="text-base font-semibold text-slate-900 line-clamp-1">
-                      {product.name}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 text-sm text-slate-600">
+                    <CardTitle className="text-base font-semibold line-clamp-1">{product.name}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-sm">
                       {product.description || "No description available"}
                     </CardDescription>
 
                     {product.city && (
                       <div className="flex items-center gap-1 mt-2">
-                        <MapPin className="h-3 w-3 text-slate-500" />
+                        <MapPin className="h-3 w-3 text-muted-foreground" />
                         <Badge variant="outline" className="text-xs">
                           {product.city}
                         </Badge>
@@ -371,23 +360,23 @@ export default function MarketplaceContent({
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star key={star} className="h-3 w-3 fill-orange-400 text-orange-400" />
                       ))}
-                      <span className="text-xs text-slate-500 ml-1">(0)</span>
+                      <span className="text-xs text-muted-foreground ml-1">(0)</span>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-2xl font-bold text-red-600">
-                          {Number.parseFloat(product.price).toFixed(2)} MAD
+                        <span className="text-2xl font-bold text-primary">
+                          {Number.parseFloat(product.price).toFixed(2)} {t("common.currency")}
                         </span>
                       </div>
                       <Button
                         size="sm"
-                        className="bg-red-600 hover:bg-red-700 gap-2"
+                        className="bg-primary hover:bg-primary/90 gap-2"
                         onClick={() => router.push(`/checkout/${product.id}`)}
                       >
                         <ShoppingCart className="h-4 w-4" />
-                        Buy Now
+                        {t("marketplace.buyNow")}
                       </Button>
                     </div>
                   </CardContent>

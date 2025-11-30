@@ -563,18 +563,16 @@ export default function DashboardContent({
       <header className="bg-card shadow-sm border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {storeData.store_logo_url ? (
-              <img
-                src={storeData.store_logo_url || "/placeholder.svg"}
-                alt="Store Logo"
-                className="h-12 w-12 rounded-full object-cover"
-              />
-            ) : (
-              <Store className="h-8 w-8 text-primary" />
-            )}
+            <img src="/farmegg-logo.jpg" alt="FarmEgg" className="h-12 w-12 rounded-full object-cover" />
             <div>
-              <h1 className="text-2xl font-bold text-card-foreground">
-                {storeData.store_name || t("dashboard.title")}
+              <h1 className="text-2xl font-bold text-card-foreground flex items-center gap-2">
+                <span className="text-primary">FarmEgg</span>
+                {storeData.store_name && (
+                  <>
+                    <span className="text-muted-foreground">·</span>
+                    <span>{storeData.store_name}</span>
+                  </>
+                )}
               </h1>
               <p className="text-sm text-muted-foreground">{userEmail}</p>
             </div>

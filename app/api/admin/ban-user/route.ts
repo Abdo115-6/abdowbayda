@@ -23,8 +23,18 @@ export async function POST(request: Request) {
 
     const { userId, isBanned } = await request.json()
 
-    // Update user ban status
-    const { error: updateError } = await supabase.from("profiles").update({ is_banned: isBanned }).eq("id", userId)
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+
+    // Update user ban status and store IP if banning
+    const updateData: any = { is_banned: isBanned }
+    if (isBanned) {
+      updateData.banned_ip = ip
+    } else {
+      // Clear banned IP when unbanning
+      updateData.banned_ip = null
+    }
+
+    const { error: updateError } = await supabase.from("profiles").update(updateData).eq("id", userId)
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 500 })

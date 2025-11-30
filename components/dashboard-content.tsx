@@ -53,6 +53,7 @@ type Product = {
   image_url: string | null
   category: string | null
   stock: number
+  city: string | null
   created_at: string
 }
 
@@ -112,6 +113,7 @@ export default function DashboardContent({
     image_url: "",
     category: "",
     stock: "0",
+    city: "",
   })
 
   const [storeData, setStoreData] = useState({
@@ -284,7 +286,7 @@ export default function DashboardContent({
   }
 
   const resetForm = () => {
-    setFormData({ name: "", description: "", price: "", image_url: "", category: "", stock: "0" })
+    setFormData({ name: "", description: "", price: "", image_url: "", category: "", stock: "0", city: "" })
     setEditingProduct(null)
   }
 
@@ -346,7 +348,7 @@ export default function DashboardContent({
   }
 
   const copyStoreUrl = () => {
-    const url = `${window.location.origin}/store/${profile.store_slug || userId}`
+    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/store/${profile.store_slug || userId}`
     navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -381,6 +383,7 @@ export default function DashboardContent({
             image_url: formData.image_url || null,
             category: formData.category || null,
             stock: Number.parseInt(formData.stock),
+            city: formData.city || null,
             seller_id: userId,
           },
         ])
@@ -413,22 +416,7 @@ export default function DashboardContent({
 
     setIsLoading(true)
     try {
-      if (!formData.name.trim()) {
-        toast({
-          title: "Product name is required",
-          variant: "destructive",
-        })
-        return
-      }
-      if (Number.parseFloat(formData.price) <= 0) {
-        toast({
-          title: "Price must be greater than 0",
-          variant: "destructive",
-        })
-        return
-      }
-
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("products")
         .update({
           name: formData.name,
@@ -437,14 +425,20 @@ export default function DashboardContent({
           image_url: formData.image_url || null,
           category: formData.category || null,
           stock: Number.parseInt(formData.stock),
+          city: formData.city || null,
         })
         .eq("id", editingProduct.id)
-        .select()
 
       if (error) throw error
 
-      setProducts(products.map((p) => (p.id === editingProduct.id ? data[0] : p)))
-      setEditingProduct(null)
+      setProducts(
+        products.map((p) =>
+          p.id === editingProduct.id
+            ? { ...p, ...formData, stock: Number.parseInt(formData.stock), city: formData.city || null }
+            : p,
+        ),
+      )
+      setIsAddDialogOpen(false)
       resetForm()
       toast({
         title: "Product updated successfully!",
@@ -496,7 +490,9 @@ export default function DashboardContent({
       image_url: product.image_url || "",
       category: product.category || "",
       stock: product.stock.toString(),
+      city: product.city || "",
     })
+    setIsAddDialogOpen(true)
   }
 
   const getStatusBadge = (status: string) => {
@@ -817,6 +813,16 @@ export default function DashboardContent({
                         </Select>
                       </div>
                       <div className="grid gap-2">
+                        <Label htmlFor="city">City</Label>
+                        <Input
+                          id="city"
+                          value={formData.city}
+                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                          placeholder="e.g., Casablanca, Rabat, Marrakech"
+                        />
+                        <p className="text-xs text-slate-500">Enter your city to help buyers find local products</p>
+                      </div>
+                      <div className="grid gap-2">
                         <Label htmlFor="price">Price (MAD)</Label>
                         <Input
                           id="price"
@@ -898,11 +904,18 @@ export default function DashboardContent({
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-lg">{product.name}</CardTitle>
-                        {product.category && (
-                          <Badge variant="secondary" className="text-xs">
-                            {product.category}
-                          </Badge>
-                        )}
+                        <div className="flex flex-col items-end gap-2">
+                          {product.category && (
+                            <Badge variant="secondary" className="text-xs">
+                              {product.category}
+                            </Badge>
+                          )}
+                          {product.city && (
+                            <Badge variant="outline" className="text-xs">
+                              {product.city}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       <CardDescription className="line-clamp-2">
                         {product.description || "No description"}
@@ -975,6 +988,18 @@ export default function DashboardContent({
                                         <SelectItem value="other">Other</SelectItem>
                                       </SelectContent>
                                     </Select>
+                                  </div>
+                                  <div className="grid gap-2">
+                                    <Label htmlFor="edit_city">City</Label>
+                                    <Input
+                                      id="edit_city"
+                                      value={formData.city}
+                                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                      placeholder="e.g., Casablanca, Rabat, Marrakech"
+                                    />
+                                    <p className="text-xs text-slate-500">
+                                      Enter your city to help buyers find local products
+                                    </p>
                                   </div>
                                   <div className="grid gap-2">
                                     <Label htmlFor="edit_price">Price (MAD)</Label>

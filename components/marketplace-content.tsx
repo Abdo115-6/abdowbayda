@@ -5,10 +5,23 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search, LogOut, Package, Grid3x3, List, ShoppingCart, Store, Star, Home, ChevronRight } from "lucide-react"
+import {
+  Search,
+  LogOut,
+  Package,
+  Grid3x3,
+  List,
+  ShoppingCart,
+  Store,
+  Star,
+  Home,
+  ChevronRight,
+  MapPin,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
+import { Badge } from "@/components/ui/badge"
 
 type Product = {
   id: string
@@ -17,6 +30,7 @@ type Product = {
   price: string
   image_url: string | null
   category: string | null
+  city: string | null
   created_at: string
   seller_id: string
   profiles: {
@@ -39,6 +53,7 @@ export default function MarketplaceContent({
   const [products] = useState<Product[]>(initialProducts)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedCity, setSelectedCity] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const router = useRouter()
@@ -62,6 +77,8 @@ export default function MarketplaceContent({
   // Get unique categories from products
   const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)))
 
+  const cities = Array.from(new Set(products.map((p) => p.city).filter(Boolean)))
+
   // Filter and sort products
   let filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -71,7 +88,9 @@ export default function MarketplaceContent({
 
     const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
 
-    return matchesSearch && matchesCategory
+    const matchesCity = selectedCity === "all" || product.city === selectedCity
+
+    return matchesSearch && matchesCategory && matchesCity
   })
 
   // Sort products
@@ -179,7 +198,7 @@ export default function MarketplaceContent({
 
         {/* Filters and Controls */}
         <div className="bg-white border border-slate-200 rounded-lg p-6 mb-6">
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
+          <div className="grid md:grid-cols-4 gap-4 mb-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
@@ -200,6 +219,20 @@ export default function MarketplaceContent({
                 {categories.map((cat) => (
                   <SelectItem key={cat} value={cat || ""}>
                     {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedCity} onValueChange={setSelectedCity}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Cities" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Cities</SelectItem>
+                {cities.map((city) => (
+                  <SelectItem key={city} value={city || ""}>
+                    {city}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -248,7 +281,7 @@ export default function MarketplaceContent({
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Package className="h-12 w-12 text-slate-400 mb-4" />
               <p className="text-slate-600 text-center">
-                {searchQuery || selectedCategory !== "all"
+                {searchQuery || selectedCategory !== "all" || selectedCity !== "all"
                   ? "No products found matching your filters."
                   : "No products available yet. Check back soon!"}
               </p>
@@ -321,6 +354,15 @@ export default function MarketplaceContent({
                     <CardDescription className="line-clamp-2 text-sm text-slate-600">
                       {product.description || "No description available"}
                     </CardDescription>
+
+                    {product.city && (
+                      <div className="flex items-center gap-1 mt-2">
+                        <MapPin className="h-3 w-3 text-slate-500" />
+                        <Badge variant="outline" className="text-xs">
+                          {product.city}
+                        </Badge>
+                      </div>
+                    )}
 
                     {/* Rating */}
                     <div className="flex items-center gap-1 mt-2">

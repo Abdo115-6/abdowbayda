@@ -208,7 +208,10 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file)
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      })
       setFormData((prev) => ({ ...prev, image_url: url }))
       toast({
         title: "Image uploaded successfully!",
@@ -262,7 +265,10 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file)
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      })
       setStoreData((prev) => ({ ...prev, store_logo_url: url }))
       toast({
         title: "Logo uploaded successfully!",
@@ -545,12 +551,20 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file)
-      setStoreData({ ...storeData, store_cover_url: url })
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      })
+      setStoreData((prev) => ({ ...prev, store_cover_url: url }))
+      toast({
+        title: "Cover image uploaded successfully!",
+        variant: "default",
+      })
     } catch (error) {
-      console.error("Error uploading cover:", error)
+      console.error("[v0] Error uploading cover:", error)
       toast({
         title: "Failed to upload cover image",
+        description: error instanceof Error ? error.message : "Unknown error",
         variant: "destructive",
       })
     } finally {

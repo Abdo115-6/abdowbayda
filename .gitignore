@@ -1,0 +1,14 @@
+.vercel
+.env*.local
+node_modules
+.env.local.backup
+.env.local.new
+.DS_Store
+.vscode
+.env.local
+.env.local.*
+.env.backup
+.env.new
+.next/
+out/
+build/

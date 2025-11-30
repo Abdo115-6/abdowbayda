@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import {
   Search,
   Users,
@@ -20,6 +21,9 @@ import {
   Ban,
   UserCheck,
   Settings,
+  Mail,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -74,10 +78,25 @@ type Order = {
   }
 }
 
+type ContactMessage = {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  subject: string
+  contact_reason: string
+  message: string
+  file_url: string | null
+  file_name: string | null
+  is_read: boolean
+  created_at: string
+}
+
 type AdminAnalyticsProps = {
   profiles: Profile[]
   products: Product[]
   orders: Order[]
+  contactMessages: ContactMessage[]
   currentUserEmail: string
   siteSettings: { id: string; marketplace_hero_image: string; updated_at: string } | null
 }
@@ -86,6 +105,7 @@ export default function AdminAnalytics({
   profiles,
   products,
   orders,
+  contactMessages,
   currentUserEmail,
   siteSettings,
 }: AdminAnalyticsProps) {
@@ -97,6 +117,9 @@ export default function AdminAnalytics({
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null)
   const [isUploadingBackground, setIsUploadingBackground] = useState(false)
   const [banningUserId, setBanningUserId] = useState<string | null>(null)
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null)
 
   const analytics = useMemo(() => {
     const totalUsers = profiles.length
@@ -233,6 +256,51 @@ export default function AdminAnalytics({
     }
   }
 
+  const handleDeleteProduct = async (product: Product) => {
+    setProductToDelete(product)
+    setDeleteDialogOpen(true)
+  }
+
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return
+    
+    setDeletingProductId(productToDelete.id)
+    try {
+      // Delete the product
+      const response = await fetch("/api/admin/delete-product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          productId: productToDelete.id,
+          sellerId: productToDelete.seller_id,
+          sellerEmail: productToDelete.profiles?.email,
+          productName: productToDelete.name
+        }),
+      })
+
+      if (!response.ok) throw new Error("Failed to delete product")
+
+      toast({
+        title: "Success",
+        description: `Product "${productToDelete.name}" deleted successfully! Warning sent to seller.`,
+      })
+
+      setDeleteDialogOpen(false)
+      setProductToDelete(null)
+      
+      // Force a full page reload to ensure data is refreshed
+      window.location.reload()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete product. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setDeletingProductId(null)
+    }
+  }
+
   const filteredProfiles = profiles.filter((profile) => {
     const matchesSearch =
       profile.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -324,6 +392,7 @@ export default function AdminAnalytics({
             <TabsTrigger value="users">All Users</TabsTrigger>
             <TabsTrigger value="products">All Products</TabsTrigger>
             <TabsTrigger value="orders">All Orders</TabsTrigger>
+            <TabsTrigger value="contacts">Contact Messages</TabsTrigger>
             <TabsTrigger value="settings">Site Settings</TabsTrigger>
           </TabsList>
 
@@ -561,12 +630,13 @@ export default function AdminAnalytics({
                       <TableHead className="text-right">Price</TableHead>
                       <TableHead className="text-right">Stock</TableHead>
                       <TableHead>Created</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredProducts.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground">
+                        <TableCell colSpan={7} className="text-center text-muted-foreground">
                           No products found
                         </TableCell>
                       </TableRow>
@@ -583,6 +653,24 @@ export default function AdminAnalytics({
                             <Badge variant={product.stock > 10 ? "default" : "destructive"}>{product.stock}</Badge>
                           </TableCell>
                           <TableCell className="text-sm">{new Date(product.created_at).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteProduct(product)}
+                              disabled={deletingProductId === product.id}
+                              className="gap-1"
+                            >
+                              {deletingProductId === product.id ? (
+                                "Deleting..."
+                              ) : (
+                                <>
+                                  <Trash2 className="h-3 w-3" />
+                                  Delete
+                                </>
+                              )}
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
@@ -653,6 +741,126 @@ export default function AdminAnalytics({
             </Card>
           </TabsContent>
 
+          <TabsContent value="contacts" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Mail className="h-5 w-5" />
+                  <CardTitle>Contact Messages ({contactMessages.length})</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Messages from users via the contact form
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {contactMessages.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Mail className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">No contact messages yet</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {contactMessages
+                        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                        .map((message) => (
+                          <Card key={message.id} className={`${!message.is_read ? 'border-primary/50 bg-primary/5' : ''}`}>
+                            <CardHeader className="pb-3">
+                              <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2">
+                                    <h4 className="font-semibold">{message.name}</h4>
+                                    {!message.is_read && (
+                                      <Badge variant="secondary" className="text-xs">New</Badge>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">{message.email}</p>
+                                  {message.phone && (
+                                    <p className="text-xs text-muted-foreground">{message.phone}</p>
+                                  )}
+                                </div>
+                                <div className="text-right">
+                                  <Badge variant="outline" className="mb-1">
+                                    {message.contact_reason.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                  </Badge>
+                                  <p className="text-xs text-muted-foreground">
+                                    {new Date(message.created_at).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="space-y-3">
+                                <div>
+                                  <h5 className="font-medium mb-1">Subject: {message.subject}</h5>
+                                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                    {message.message}
+                                  </p>
+                                </div>
+                                
+                                {message.file_url && message.file_name && (
+                                  <div className="flex items-center gap-2 p-2 bg-muted rounded">
+                                    <Package className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-sm">Attachment: {message.file_name}</span>
+                                    <a 
+                                      href={message.file_url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline text-sm ml-auto"
+                                    >
+                                      View
+                                    </a>
+                                  </div>
+                                )}
+
+                                <div className="flex gap-2 pt-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    onClick={() => {
+                                      const subject = `Re: ${message.subject}`
+                                      const body = `Hi ${message.name},\n\nThank you for your message regarding "${message.subject}".\n\n`
+                                      window.open(`mailto:${message.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`)
+                                    }}
+                                  >
+                                    Reply via Email
+                                  </Button>
+                                  {!message.is_read && (
+                                    <Button 
+                                      size="sm" 
+                                      variant="ghost"
+                                      onClick={async () => {
+                                        try {
+                                          // In a real app, you'd call an API to mark as read
+                                          // For now, we'll just show a toast
+                                          toast({
+                                            title: "Message marked as read",
+                                            description: "This would update in the database in a real implementation"
+                                          })
+                                        } catch (error) {
+                                          toast({
+                                            title: "Error",
+                                            description: "Failed to mark message as read",
+                                            variant: "destructive"
+                                          })
+                                        }
+                                      }}
+                                    >
+                                      Mark as Read
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="settings" className="space-y-4">
             <Card>
               <CardHeader>
@@ -706,6 +914,73 @@ export default function AdminAnalytics({
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Delete Product Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              Delete Product
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{productToDelete?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 my-4">
+            <div className="flex gap-2">
+              <AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-semibold text-amber-900 mb-1">Warning will be sent</p>
+                <p className="text-amber-700">
+                  The seller "{productToDelete?.profiles?.store_name || 'Unknown'}" will receive a warning message about this product removal.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex gap-2">
+              <Trash2 className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-semibold text-red-900 mb-1">This will:</p>
+                <ul className="text-red-700 space-y-1">
+                  <li>• Remove the product from marketplace</li>
+                  <li>• Remove it from seller's store</li>
+                  <li>• Cancel any pending orders for this product</li>
+                  <li>• Send an automated warning to the seller</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={deletingProductId !== null}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteProduct}
+              disabled={deletingProductId !== null}
+              className="gap-2"
+            >
+              {deletingProductId !== null ? (
+                "Deleting..."
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4" />
+                  Delete Product & Send Warning
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

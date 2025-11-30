@@ -44,7 +44,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
-import { put } from "@vercel/blob"
+// Removed direct Vercel Blob import - using API route instead
 import { useToast } from "@/hooks/use-toast"
 
 type Product = {
@@ -208,10 +208,20 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
-        access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
       })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
+      }
+      
+      const { url } = await response.json()
       setFormData((prev) => ({ ...prev, image_url: url }))
       toast({
         title: "Image uploaded successfully!",

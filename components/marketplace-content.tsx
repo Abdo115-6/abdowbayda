@@ -68,6 +68,14 @@ export default function MarketplaceContent({
     console.log("[v0] First product:", products[0])
     console.log("[v0] First product profiles:", products[0].profiles)
   }
+   const handleAbout = async () => {
+    await supabase.auth.signOut()
+    router.push("/about")
+  }
+  const handleContact = async () => {
+    await supabase.auth.signOut()
+    router.push("/contact")
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -129,12 +137,21 @@ export default function MarketplaceContent({
                 <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
                   {t("nav.marketplace")}
                 </a>
-                <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
-                  About
-                </a>
-                <a href="#" className="text-foreground/70 hover:text-foreground font-medium transition-colors">
-                  Contact
-                </a>
+                <Button
+                  onClick={() => router.push("/about")}
+                  variant="ghost"
+                  className="text-foreground/70 hover:text-foreground font-medium transition-colors"
+                >
+                 About
+                </Button>
+               
+                 <Button
+                  onClick={() => router.push("/contact")}
+                  variant="ghost"
+                  className="text-foreground/70 hover:text-foreground font-medium transition-colors"
+                >
+                 Contact
+                </Button>
                 <Button
                   onClick={() => router.push("/incubator")}
                   variant="ghost"

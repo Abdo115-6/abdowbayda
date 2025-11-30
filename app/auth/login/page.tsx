@@ -62,9 +62,14 @@ export default function LoginPage() {
         router.push("/marketplace")
       }
     } catch (error: unknown) {
+      console.error("[LOGIN DEBUG] Full error:", error)
       const errorMessage = error instanceof Error ? error.message : "An error occurred"
+      console.error("[LOGIN DEBUG] Error message:", errorMessage)
+      
       if (errorMessage.includes("Invalid login credentials")) {
         setError("Invalid email or password. Please try again.")
+      } else if (errorMessage.includes("Invalid API key")) {
+        setError("Authentication service error. Please check configuration.")
       } else {
         setError(errorMessage)
       }

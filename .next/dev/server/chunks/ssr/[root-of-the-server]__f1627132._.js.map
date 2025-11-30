@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/abdo2/Desktop/work/chicken/chicken_web/app/page.tsx"],"sourcesContent":["import { redirect } from \"next/navigation\"\r\n\r\nexport default function Home() {\r\n  redirect(\"/auth/login\")\r\n}\r\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,SAAS;IACtB,IAAA,iMAAQ,EAAC;AACX"}}]
+}

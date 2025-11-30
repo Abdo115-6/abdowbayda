@@ -48,6 +48,12 @@ export default async function AdminPage() {
     `)
     .order("created_at", { ascending: false })
 
+  // Fetch all contact messages
+  const { data: contactMessages } = await supabase
+    .from("contact_messages")
+    .select("*")
+    .order("created_at", { ascending: false })
+
   const { data: siteSettings } = await supabase.from("site_settings").select("*").single()
 
   return (
@@ -55,6 +61,7 @@ export default async function AdminPage() {
       profiles={allProfiles || []}
       products={allProducts || []}
       orders={allOrders || []}
+      contactMessages={contactMessages || []}
       currentUserEmail={user.email || ""}
       siteSettings={siteSettings || null}
     />

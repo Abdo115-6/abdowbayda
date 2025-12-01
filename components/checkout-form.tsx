@@ -83,7 +83,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_address: formData.address,
       })
 
-      // Insert order with buyer_id to satisfy database constraints
+      // Insert order with buyer_id to satisfy database constraints - v1.1
       const { data: orderData, error: insertError } = await supabase.from("orders").insert({
         seller_id: product.seller_id,
         product_id: product.id,

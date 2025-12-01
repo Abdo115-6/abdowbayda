@@ -71,20 +71,6 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
       const userEmail = user?.email || `user-${userId}@placeholder.com`
 
       console.log("[DEBUG] Creating order with data:", {
-        buyer_id: userId,
-        seller_id: product.seller_id,
-        product_id: product.id,
-        quantity,
-        total_price: Number.parseFloat(totalPrice),
-        payment_method: "cash",
-        buyer_name: formData.name,
-        buyer_email: userEmail,
-        buyer_phone: formData.phone,
-        buyer_address: formData.address,
-      })
-
-      const { data: orderData, error: insertError } = await supabase.from("orders").insert({
-        buyer_id: userId,
         seller_id: product.seller_id,
         product_id: product.id,
         quantity,
@@ -95,6 +81,20 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_email: userEmail,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
+      })
+
+      // Try inserting without buyer_email first to isolate the issue
+      const { data: orderData, error: insertError } = await supabase.from("orders").insert({
+        seller_id: product.seller_id,
+        product_id: product.id,
+        quantity,
+        total_price: Number.parseFloat(totalPrice),
+        payment_method: "cash",
+        status: "pending",
+        buyer_name: formData.name,
+        buyer_phone: formData.phone,
+        buyer_address: formData.address,
+        notes: `Order by user: ${userId}, Email: ${userEmail}`, // Store email in notes temporarily
       }).select()
 
       console.log("[DEBUG] Order insert result:", { orderData, insertError })

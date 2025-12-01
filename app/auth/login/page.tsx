@@ -62,14 +62,15 @@ export default function LoginPage() {
         router.push("/marketplace")
       }
     } catch (error: unknown) {
-      console.error("[LOGIN DEBUG] Full error:", error)
+      console.error("[LOGIN ERROR] Full error object:", error)
       const errorMessage = error instanceof Error ? error.message : "An error occurred"
-      console.error("[LOGIN DEBUG] Error message:", errorMessage)
+      console.error("[LOGIN ERROR] Error message:", errorMessage)
       
       if (errorMessage.includes("Invalid login credentials")) {
         setError("Invalid email or password. Please try again.")
       } else if (errorMessage.includes("Invalid API key")) {
-        setError("Authentication service error. Please check configuration.")
+        setError("Supabase API key issue. Please check configuration.")
+        console.error("[LOGIN ERROR] This is likely a Supabase configuration problem")
       } else {
         setError(errorMessage)
       }

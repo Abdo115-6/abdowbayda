@@ -27,7 +27,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$head
 ;
 async function createClient() {
     const cookieStore = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["cookies"])();
-    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$ssr$2f$dist$2f$module$2f$createServerClient$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createServerClient"])(("TURBOPACK compile-time value", "https://afjogobfvfsytdvdlvch.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmam9nb2JmdmZzeXRkdmRsdmNoIiwicm9zZSI6ImFub24iLCJpYXQiOjE3NjQwNTM3MzAsImV4cCI6MjA3OTYyOTczMH0.z-6BOsljYdUVTkjFv6vSVZnm4lowumuQx90qQH8zhpA"), {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$ssr$2f$dist$2f$module$2f$createServerClient$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createServerClient"])(("TURBOPACK compile-time value", "https://afjogobfvfsytdvdlvch.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmam9nb2JmdmZzeXRkdmRsdmNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNTM3MzAsImV4cCI6MjA3OTYyOTczMH0.z-6BOsljYdUVTkjFv6vSVZnm4lowumuQx90qQH8zhpA"), {
         cookies: {
             getAll () {
                 return cookieStore.getAll();

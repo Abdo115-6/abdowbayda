@@ -173,15 +173,6 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
-// Validate ../../../app/test-upload/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/test-upload">> = Specific
-  const handler = {} as typeof import("../../../app/test-upload/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../../app/api/admin/ban-user/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/ban-user">> = Specific

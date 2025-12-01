@@ -226,10 +226,8 @@
     --color-slate-800: #1d293d;
     --color-slate-900: #0f172b;
     --color-slate-950: #020618;
-    --color-gray-100: #f3f4f6;
     --color-gray-300: #d1d5dc;
     --color-gray-400: #99a1af;
-    --color-gray-500: #6a7282;
     --color-gray-600: #4a5565;
     --color-gray-700: #364153;
     --color-black: #000;
@@ -341,10 +339,8 @@
       --color-slate-800: lab(16.132% -.318021 -14.6672);
       --color-slate-900: lab(7.78673% 1.82346 -15.0537);
       --color-slate-950: lab(1.76974% 1.32743 -9.28855);
-      --color-gray-100: lab(96.1596% -.082314 -1.13575);
       --color-gray-300: lab(85.1236% -.612259 -3.7138);
       --color-gray-400: lab(65.9269% -.832707 -8.17474);
-      --color-gray-500: lab(47.7841% -.393212 -10.0268);
       --color-gray-600: lab(35.6337% -1.58697 -10.8425);
       --color-gray-700: lab(27.1134% -.956401 -12.3224);
     }
@@ -894,10 +890,6 @@
     -webkit-box-orient: vertical;
     display: -webkit-box;
     overflow: hidden;
-  }
-
-  .block {
-    display: block;
   }
 
   .flex {
@@ -1482,10 +1474,6 @@
     justify-self: flex-end;
   }
 
-  .overflow-auto {
-    overflow: auto;
-  }
-
   .overflow-hidden {
     overflow: hidden;
   }
@@ -1724,10 +1712,6 @@
 
   .bg-destructive {
     background-color: var(--destructive);
-  }
-
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
   }
 
   .bg-green-50 {
@@ -2277,10 +2261,6 @@
     }
   }
 
-  .text-gray-500 {
-    color: var(--color-gray-500);
-  }
-
   .text-gray-600 {
     color: var(--color-gray-600);
   }
@@ -2622,10 +2602,6 @@
     color: var(--primary-foreground);
   }
 
-  .file\:mr-4::file-selector-button {
-    margin-right: calc(var(--spacing) * 4);
-  }
-
   .file\:inline-flex::file-selector-button {
     display: inline-flex;
   }
@@ -2634,29 +2610,13 @@
     height: calc(var(--spacing) * 7);
   }
 
-  .file\:rounded-full::file-selector-button {
-    border-radius: 3.40282e38px;
-  }
-
   .file\:border-0::file-selector-button {
     border-style: var(--tw-border-style);
     border-width: 0;
   }
 
-  .file\:bg-blue-50::file-selector-button {
-    background-color: var(--color-blue-50);
-  }
-
   .file\:bg-transparent::file-selector-button {
     background-color: #0000;
-  }
-
-  .file\:px-4::file-selector-button {
-    padding-inline: calc(var(--spacing) * 4);
-  }
-
-  .file\:py-2::file-selector-button {
-    padding-block: calc(var(--spacing) * 2);
   }
 
   .file\:text-sm::file-selector-button {
@@ -2667,15 +2627,6 @@
   .file\:font-medium::file-selector-button {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
-  }
-
-  .file\:font-semibold::file-selector-button {
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .file\:text-blue-700::file-selector-button {
-    color: var(--color-blue-700);
   }
 
   .file\:text-foreground::file-selector-button {
@@ -2710,12 +2661,6 @@
   @media (hover: hover) {
     .hover\:bg-blue-600:hover {
       background-color: var(--color-blue-600);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:bg-blue-700:hover {
-      background-color: var(--color-blue-700);
     }
   }
 
@@ -2885,12 +2830,6 @@
   @media (hover: hover) {
     .group-\[\.destructive\]\:hover\:text-red-50:is(:where(.group).destructive *):hover {
       color: var(--color-red-50);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:file\:bg-blue-100:hover::file-selector-button {
-      background-color: var(--color-blue-100);
     }
   }
 

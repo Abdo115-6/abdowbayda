@@ -3,24 +3,17 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("[DEBUG] BLOB_READ_WRITE_TOKEN exists:", !!process.env.BLOB_READ_WRITE_TOKEN)
-    console.log("[DEBUG] BLOB_READ_WRITE_TOKEN length:", process.env.BLOB_READ_WRITE_TOKEN?.length)
-    console.log("[DEBUG] BLOB_READ_WRITE_TOKEN starts with:", process.env.BLOB_READ_WRITE_TOKEN?.slice(0, 20))
-
     if (!process.env.BLOB_READ_WRITE_TOKEN) {
       console.error("BLOB_READ_WRITE_TOKEN is not configured")
       return NextResponse.json({ error: "Upload service not configured" }, { status: 500 })
     }
 
     const formData = await request.formData()
-    const file = formData.get("file")
+    const file = formData.get("file") as File | null
 
-    if (!file || !(file instanceof File)) {
-      console.error("[DEBUG] No valid file provided:", file)
+    if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
-    
-    console.log("[DEBUG] File received:", file.name, file.size, file.type)
 
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
@@ -49,15 +42,10 @@ export async function POST(request: NextRequest) {
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
     const uniqueFileName = `${timestamp}-${sanitizedName}`
 
-    console.log("[DEBUG] About to upload to Blob:", uniqueFileName)
-    console.log("[DEBUG] Using token ending with:", process.env.BLOB_READ_WRITE_TOKEN?.slice(-10))
-
     const blob = await put(uniqueFileName, file, {
       access: "public",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
-    
-    console.log("[DEBUG] Upload successful:", blob.url)
 
     return NextResponse.json({
       url: blob.url,

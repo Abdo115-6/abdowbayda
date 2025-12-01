@@ -44,7 +44,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
-// Removed direct Vercel Blob import - using API route instead
+import { put } from "@vercel/blob"
 import { useToast } from "@/hooks/use-toast"
 
 type Product = {
@@ -208,20 +208,10 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
       })
-      
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
-      }
-      
-      const { url } = await response.json()
       setFormData((prev) => ({ ...prev, image_url: url }))
       toast({
         title: "Image uploaded successfully!",
@@ -275,20 +265,10 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || "Upload failed")
-      }
-
-      const { url } = await response.json()
       setStoreData((prev) => ({ ...prev, store_logo_url: url }))
       toast({
         title: "Logo uploaded successfully!",
@@ -571,20 +551,10 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const { url } = await put(file.name, file, {
+        access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || "Upload failed")
-      }
-
-      const { url } = await response.json()
       setStoreData((prev) => ({ ...prev, store_cover_url: url }))
       toast({
         title: "Cover image uploaded successfully!",

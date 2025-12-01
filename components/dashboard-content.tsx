@@ -104,6 +104,7 @@ export default function DashboardContent({
   const [isLoading, setIsLoading] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [origin, setOrigin] = useState("")
   const router = useRouter()
   const supabase = createClient()
   const { toast } = useToast()
@@ -128,6 +129,10 @@ export default function DashboardContent({
 
   useEffect(() => {
     fetchOrders()
+    // Set origin URL client-side to avoid SSR issues
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin)
+    }
   }, [])
 
   const fetchOrders = async () => {
@@ -344,7 +349,9 @@ export default function DashboardContent({
         variant: "default",
       })
 
-      window.location.reload()
+      if (typeof window !== 'undefined') {
+        window.location.reload()
+      }
     } catch (error) {
       console.error("[v0] Error saving store:", error)
       toast({
@@ -358,10 +365,12 @@ export default function DashboardContent({
   }
 
   const copyStoreUrl = () => {
-    const url = `${window.location.origin}/store/${storeData.store_slug || userId}`
-    navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (origin) {
+      const url = `${origin}/store/${storeData.store_slug || userId}`
+      navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }
 
   const handleAddProduct = async (e: React.FormEvent) => {
@@ -718,7 +727,7 @@ export default function DashboardContent({
           <CardContent>
             <div className="flex items-center gap-2">
               <Input
-                value={`${window.location.origin}/store/${storeData.store_slug || userId}`}
+                value={origin ? `${origin}/store/${storeData.store_slug || userId}` : ""}
                 readOnly
                 className="flex-1 bg-white dark:bg-slate-800"
               />
@@ -726,7 +735,11 @@ export default function DashboardContent({
                 {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
               </Button>
               <Button
-                onClick={() => window.open(`/store/${storeData.store_slug || userId}`, "_blank")}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.open(`/store/${storeData.store_slug || userId}`, "_blank")
+                  }
+                }}
                 variant="outline"
                 size="icon"
               >

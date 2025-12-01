@@ -1,7 +1,3 @@
 {
-  "/admin/page": "app/admin/page.js",
-  "/api/admin/delete-product/route": "app/api/admin/delete-product/route.js",
-  "/auth/login/page": "app/auth/login/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/marketplace/page": "app/marketplace/page.js"
+  "/dashboard/page": "app/dashboard/page.js"
 }

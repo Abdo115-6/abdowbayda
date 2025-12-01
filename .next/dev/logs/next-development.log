@@ -1,139 +1,101 @@
-[00:00:00.794] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:00.918] Server  LOG      ✓ Ready in 667ms
-[00:00:03.586] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:03.745] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:03.745] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/auth/login","route":"/auth/login"}
-[00:00:03.745] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/auth/login?id=ce8396ef-e2e1-46ad-8812-13a5699803f0&vscodeBrowserReqId=1764547324282 color: rgb(120, 120, 120) color: inherit {"dp":"/auth/login","o":"http://localhost:3000/auth/login?id=ce8396ef-e2e1-46ad-8812-13a5699803f0&vscodeBrowserReqId=1764547324282","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547428399}
-[00:00:04.043] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:04.043] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/auth/login","route":"/auth/login"}
-[00:00:04.043] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/auth/login color: rgb(120, 120, 120) color: inherit {"dp":"/auth/login","o":"http://localhost:3000/auth/login","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547428398}
-[00:00:10.808] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:10.808] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/auth/login","route":"/auth/login"}
-[00:00:10.808] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/auth/login?id=ce8396ef-e2e1-46ad-8812-13a5699803f0&vscodeBrowserReqId=1764547435013 color: rgb(120, 120, 120) color: inherit {"dp":"/auth/login","o":"http://localhost:3000/auth/login?id=ce8396ef-e2e1-46ad-8812-13a5699803f0&vscodeBrowserReqId=1764547435013","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547435461}
-[00:00:16.043] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:17.043] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:17.043] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/auth/login","route":"/auth/login"}
-[00:00:17.043] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/auth/login color: rgb(120, 120, 120) color: inherit {"dp":"/auth/login","o":"http://localhost:3000/auth/login","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547440835}
-[00:00:19.377] Server  LOG      ✓ Compiled in 62ms
-[00:00:31.116] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/dashboard","o":"http://localhost:3000/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547455764}
-[00:00:35.361] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"http://localhost:3000/admin","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547460014}
-[00:00:35.742] Server  LOG      ✓ Compiled in 61ms
-[00:00:43.140] Server  LOG     Delete product API called
-[00:00:43.456] Server  LOG     Deleting product: {}
-[00:00:43.688] Server  LOG     Product found in database: {}
-[00:00:43.844] Server  LOG     Related orders deleted (if any)
-[00:00:43.999] Server  LOG     Delete result: [{...}]
-[00:00:44.156] Server  LOG     Warning message created for seller
-[00:00:44.157] Server  LOG     Product deleted successfully
-[00:00:45.823] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:45.977] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:45.977] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
-[00:00:45.977] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"http://localhost:3000/admin","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547470632}
-[00:00:52.055] Server  LOG     [v0] Products fetched: 0
-[00:00:52.055] Server  LOG     [v0] Final products with profiles: 0
-[00:00:52.385] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:52.385] Browser LOG     [SUPABASE] Key exists: true
-[00:00:52.385] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:52.385] Browser LOG     [v0] Marketplace received products: 0
-[00:00:52.385] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:52.385] Browser LOG     [SUPABASE] Key exists: true
-[00:00:52.385] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:52.385] Browser LOG     [v0] Marketplace received products: 0
-[00:00:52.385] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/marketplace color: rgb(120, 120, 120) color: inherit {"dp":"/marketplace","o":"http://localhost:3000/marketplace","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547477019}
-[00:00:56.499] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.500] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.500] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:56.500] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.500] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.500] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:56.500] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/dashboard","o":"http://localhost:3000/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764547481149}
-[00:00:56.656] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.656] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.656] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:56.656] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.656] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.656] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:56.800] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.800] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.800] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:56.800] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:56.800] Browser LOG     [SUPABASE] Key exists: true
-[00:00:56.800] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:59.091] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:59.091] Browser LOG     [SUPABASE] Key exists: true
-[00:00:59.091] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:00:59.091] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:00:59.091] Browser LOG     [SUPABASE] Key exists: true
-[00:00:59.091] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:01.931] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:01.931] Browser LOG     [SUPABASE] Key exists: true
-[00:01:01.931] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:01.931] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:01.931] Browser LOG     [SUPABASE] Key exists: true
-[00:01:01.931] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:03.962] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:03.962] Browser LOG     [SUPABASE] Key exists: true
-[00:01:03.962] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:03.962] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:03.962] Browser LOG     [SUPABASE] Key exists: true
-[00:01:03.962] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:06.845] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:06.845] Browser LOG     [SUPABASE] Key exists: true
-[00:01:06.845] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:06.845] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:06.845] Browser LOG     [SUPABASE] Key exists: true
-[00:01:06.845] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:07.984] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:07.984] Browser LOG     [SUPABASE] Key exists: true
-[00:01:07.984] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:07.984] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:07.984] Browser LOG     [SUPABASE] Key exists: true
-[00:01:07.984] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:12.147] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:12.147] Browser LOG     [SUPABASE] Key exists: true
-[00:01:12.147] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:12.147] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:12.147] Browser LOG     [SUPABASE] Key exists: true
-[00:01:12.147] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:13.001] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:13.001] Browser LOG     [SUPABASE] Key exists: true
-[00:01:13.001] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:13.001] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:13.001] Browser LOG     [SUPABASE] Key exists: true
-[00:01:13.001] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:14.698] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:14.698] Browser LOG     [SUPABASE] Key exists: true
-[00:01:14.698] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:14.698] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:14.698] Browser LOG     [SUPABASE] Key exists: true
-[00:01:14.698] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:16.181] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:16.181] Browser LOG     [SUPABASE] Key exists: true
-[00:01:16.181] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:16.181] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:16.181] Browser LOG     [SUPABASE] Key exists: true
-[00:01:16.181] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:16.412] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:16.412] Browser LOG     [SUPABASE] Key exists: true
-[00:01:16.412] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:16.412] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:16.412] Browser LOG     [SUPABASE] Key exists: true
-[00:01:16.412] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:22.002] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:22.002] Browser LOG     [SUPABASE] Key exists: true
-[00:01:22.002] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:22.002] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:22.002] Browser LOG     [SUPABASE] Key exists: true
-[00:01:22.002] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:22.225] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:22.225] Browser LOG     [SUPABASE] Key exists: true
-[00:01:22.225] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:22.225] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:22.225] Browser LOG     [SUPABASE] Key exists: true
-[00:01:22.225] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:26.043] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:26.043] Browser LOG     [SUPABASE] Key exists: true
-[00:01:26.043] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
-[00:01:26.043] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
-[00:01:26.043] Browser LOG     [SUPABASE] Key exists: true
-[00:01:26.043] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:00.791] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:00.915] Server  LOG      ✓ Ready in 653ms
+[00:00:05.616] Server  LOG     [SUPABASE] URL: "https://afjogobfvfsytdvdlvch.supabase.co"
+[00:00:05.616] Server  LOG     [SUPABASE] Key exists: true
+[00:00:05.616] Server  LOG     [SUPABASE] Key prefix: "eyJhbGciOiJIUzI1NiIs"
+[00:00:05.633] Server  ERROR   C:\Users\abdo2\Desktop\work\chicken\chicken_web\.next\dev\server\chunks\ssr\[root-of-the-server]__b2eb2788._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:05.634] Server  ERROR    ⨯ ReferenceError: window is not defined
+[00:00:05.792] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:06.083] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.083] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.083] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:06.083] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.083] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.083] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:06.083] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.083] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.083] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:06.083] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.083] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.083] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:06.083] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:06.083] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/dashboard","route":"/dashboard"}
+[00:00:06.083] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/dashboard","o":"http://localhost:3000/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764549039195}
+[00:00:06.284] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.284] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.284] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:06.284] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:06.284] Browser LOG     [SUPABASE] Key exists: true
+[00:00:06.284] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:07.833] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:07.833] Browser LOG     [SUPABASE] Key exists: true
+[00:00:07.833] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:07.833] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:07.833] Browser LOG     [SUPABASE] Key exists: true
+[00:00:07.833] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:10.099] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:10.099] Browser LOG     [SUPABASE] Key exists: true
+[00:00:10.099] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:10.099] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:10.099] Browser LOG     [SUPABASE] Key exists: true
+[00:00:10.099] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:15.162] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:15.162] Browser LOG     [SUPABASE] Key exists: true
+[00:00:15.162] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:15.162] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:15.162] Browser LOG     [SUPABASE] Key exists: true
+[00:00:15.162] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:15.162] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:15.162] Browser LOG     [SUPABASE] Key exists: true
+[00:00:15.162] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:15.162] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:15.162] Browser LOG     [SUPABASE] Key exists: true
+[00:00:15.162] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:53.159] Server  LOG      ✓ Compiled in 71ms
+[00:00:53.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:53.514] Browser LOG     [SUPABASE] Key exists: true
+[00:00:53.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:53.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:53.514] Browser LOG     [SUPABASE] Key exists: true
+[00:00:53.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:53.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:53.514] Browser LOG     [SUPABASE] Key exists: true
+[00:00:53.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:53.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:00:53.514] Browser LOG     [SUPABASE] Key exists: true
+[00:00:53.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:00:59.832] Server  LOG      ✓ Compiled in 61ms
+[00:01:00.513] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:00.513] Browser LOG     [SUPABASE] Key exists: true
+[00:01:00.513] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:00.513] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:00.513] Browser LOG     [SUPABASE] Key exists: true
+[00:01:00.513] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:10.673] Server  LOG      ✓ Compiled in 49ms
+[00:01:11.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:11.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:11.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:11.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:11.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:11.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:21.450] Server  LOG      ✓ Compiled in 58ms
+[00:01:22.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:22.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:22.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:22.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:22.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:22.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:31.916] Server  LOG      ✓ Compiled in 50ms
+[00:01:32.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:32.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:32.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:32.514] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:32.514] Browser LOG     [SUPABASE] Key exists: true
+[00:01:32.514] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:42.624] Server  LOG      ✓ Compiled in 60ms
+[00:01:43.515] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:43.515] Browser LOG     [SUPABASE] Key exists: true
+[00:01:43.515] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs
+[00:01:43.515] Browser LOG     [SUPABASE] URL: https://afjogobfvfsytdvdlvch.supabase.co
+[00:01:43.515] Browser LOG     [SUPABASE] Key exists: true
+[00:01:43.515] Browser LOG     [SUPABASE] Key prefix: eyJhbGciOiJIUzI1NiIs

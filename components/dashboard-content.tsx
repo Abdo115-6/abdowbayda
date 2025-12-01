@@ -213,9 +213,16 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
+      // Generate unique filename to avoid conflicts
+      const timestamp = Date.now()
+      const randomId = Math.random().toString(36).substring(2, 8)
+      const fileExtension = file.name.split('.').pop()
+      const uniqueFileName = `product-${timestamp}-${randomId}.${fileExtension}`
+      
+      const { url } = await put(uniqueFileName, file, {
         access: "public",
         token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        addRandomSuffix: true, // This adds another layer of uniqueness
       })
       setFormData((prev) => ({ ...prev, image_url: url }))
       toast({
@@ -270,9 +277,16 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
+      // Generate unique filename to avoid conflicts
+      const timestamp = Date.now()
+      const randomId = Math.random().toString(36).substring(2, 8)
+      const fileExtension = file.name.split('.').pop()
+      const uniqueFileName = `store-logo-${timestamp}-${randomId}.${fileExtension}`
+      
+      const { url } = await put(uniqueFileName, file, {
         access: "public",
         token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        addRandomSuffix: true, // This adds another layer of uniqueness
       })
       setStoreData((prev) => ({ ...prev, store_logo_url: url }))
       toast({
@@ -560,9 +574,16 @@ export default function DashboardContent({
 
     setIsUploading(true)
     try {
-      const { url } = await put(file.name, file, {
+      // Generate unique filename to avoid conflicts
+      const timestamp = Date.now()
+      const randomId = Math.random().toString(36).substring(2, 8)
+      const fileExtension = file.name.split('.').pop()
+      const uniqueFileName = `store-cover-${timestamp}-${randomId}.${fileExtension}`
+      
+      const { url } = await put(uniqueFileName, file, {
         access: "public",
         token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        addRandomSuffix: true, // This adds another layer of uniqueness
       })
       setStoreData((prev) => ({ ...prev, store_cover_url: url }))
       toast({

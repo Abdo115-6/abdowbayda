@@ -25,6 +25,15 @@ BEGIN
     END IF;
 END $$;
 
+-- Ensure notes column exists (it should already exist from 006_create_orders_table.sql)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name='orders' AND column_name='notes') THEN
+        ALTER TABLE orders ADD COLUMN notes TEXT;
+    END IF;
+END $$;
+
 -- Display the current orders table schema for verification
 SELECT column_name, data_type, is_nullable 
 FROM information_schema.columns 

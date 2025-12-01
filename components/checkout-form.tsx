@@ -83,7 +83,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_address: formData.address,
       })
 
-      // Try inserting without buyer_email first to isolate the issue
+      // Insert order without notes field (will be added back once database is updated)
       const { data: orderData, error: insertError } = await supabase.from("orders").insert({
         seller_id: product.seller_id,
         product_id: product.id,
@@ -94,13 +94,13 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_name: formData.name,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
-        notes: `Order by user: ${userId}, Email: ${userEmail}`, // Store email in notes temporarily
+        // notes: `Order by user: ${userId}, Email: ${userEmail}`, // Temporarily removed - missing column in DB
       }).select()
 
       console.log("[DEBUG] Order insert result:", { orderData, insertError })
 
       if (insertError) {
-        console.error("[DEBUG] Insert error details:", insertError)
+        console.log("[DEBUG] Insert error details:", insertError)
         throw insertError
       }
 
@@ -110,13 +110,13 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         .eq("id", product.id)
 
       if (stockError) {
-        console.error("Error updating stock:", stockError)
+        console.log("Error updating stock:", stockError)
         // Don't throw here, stock update failure shouldn't stop the order
       }
 
       router.push("/order-success")
     } catch (error) {
-      console.error("Error creating order:", error)
+      console.log("Error creating order:", error)
       
       // Provide more detailed error messages
       let errorMessage = "Failed to place order. Please try again."

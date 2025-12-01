@@ -66,7 +66,11 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         return
       }
 
-      const { error: insertError } = await supabase.from("orders").insert({
+      // Get the current user's email
+      const { data: { user } } = await supabase.auth.getUser()
+      const userEmail = user?.email || `user-${userId}@placeholder.com`
+
+      console.log("[DEBUG] Creating order with data:", {
         buyer_id: userId,
         seller_id: product.seller_id,
         product_id: product.id,
@@ -74,24 +78,55 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",
         buyer_name: formData.name,
-        buyer_email: userId,
+        buyer_email: userEmail,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
       })
 
-      if (insertError) throw insertError
+      const { data: orderData, error: insertError } = await supabase.from("orders").insert({
+        buyer_id: userId,
+        seller_id: product.seller_id,
+        product_id: product.id,
+        quantity,
+        total_price: Number.parseFloat(totalPrice),
+        payment_method: "cash",
+        status: "pending",
+        buyer_name: formData.name,
+        buyer_email: userEmail,
+        buyer_phone: formData.phone,
+        buyer_address: formData.address,
+      }).select()
+
+      console.log("[DEBUG] Order insert result:", { orderData, insertError })
+
+      if (insertError) {
+        console.error("[DEBUG] Insert error details:", insertError)
+        throw insertError
+      }
 
       const { error: stockError } = await supabase
         .from("products")
         .update({ stock: product.stock - quantity })
         .eq("id", product.id)
 
-      if (stockError) console.error("Error updating stock:", stockError)
+      if (stockError) {
+        console.error("Error updating stock:", stockError)
+        // Don't throw here, stock update failure shouldn't stop the order
+      }
 
       router.push("/order-success")
     } catch (error) {
       console.error("Error creating order:", error)
-      setError("Failed to place order. Please try again.")
+      
+      // Provide more detailed error messages
+      let errorMessage = "Failed to place order. Please try again."
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = `Order failed: ${error.message}`
+      } else if (error && typeof error === 'object' && 'details' in error) {
+        errorMessage = `Order failed: ${JSON.stringify(error)}`
+      }
+      
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

@@ -1,7 +1,7 @@
 -- Fix orders table schema - Add buyer_id column if missing and ensure buyer_email exists
 -- This script is safe to run multiple times
 
--- Add buyer_id column if it doesn't exist
+-- Add buyer_id column if it doesn't exist (nullable for backward compatibility)
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
@@ -13,6 +13,12 @@ BEGIN
         CREATE POLICY "Buyers can view their orders"
           ON orders FOR SELECT
           USING (buyer_id = auth.uid());
+    END IF;
+    
+    -- If buyer_id column exists but has NOT NULL constraint, make it nullable
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name='orders' AND column_name='buyer_id' AND is_nullable='NO') THEN
+        ALTER TABLE orders ALTER COLUMN buyer_id DROP NOT NULL;
     END IF;
 END $$;
 

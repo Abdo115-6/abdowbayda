@@ -83,10 +83,11 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_address: formData.address,
       })
 
-      // Insert order without notes field (will be added back once database is updated)
+      // Insert order with buyer_id to satisfy database constraints
       const { data: orderData, error: insertError } = await supabase.from("orders").insert({
         seller_id: product.seller_id,
         product_id: product.id,
+        buyer_id: userId, // Add buyer_id to satisfy NOT NULL constraint
         quantity,
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",

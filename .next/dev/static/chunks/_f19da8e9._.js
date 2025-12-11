@@ -1675,9 +1675,15 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
         }
         setIsUploading(true);
         try {
-            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
+            // Generate unique filename to avoid conflicts
+            const timestamp = Date.now();
+            const randomId = Math.random().toString(36).substring(2, 8);
+            const fileExtension = file.name.split('.').pop();
+            const uniqueFileName = `product-${timestamp}-${randomId}.${fileExtension}`;
+            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(uniqueFileName, file, {
                 access: "public",
-                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP")
+                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP"),
+                addRandomSuffix: true
             });
             setFormData((prev)=>({
                     ...prev,
@@ -1731,9 +1737,15 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
         }
         setIsUploading(true);
         try {
-            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
+            // Generate unique filename to avoid conflicts
+            const timestamp = Date.now();
+            const randomId = Math.random().toString(36).substring(2, 8);
+            const fileExtension = file.name.split('.').pop();
+            const uniqueFileName = `store-logo-${timestamp}-${randomId}.${fileExtension}`;
+            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(uniqueFileName, file, {
                 access: "public",
-                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP")
+                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP"),
+                addRandomSuffix: true
             });
             setStoreData((prev)=>({
                     ...prev,
@@ -1962,7 +1974,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                 children: "⏳ Pending"
             }, void 0, false, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 519,
+                lineNumber: 533,
                 columnNumber: 16
             }, this),
             approved: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1970,7 +1982,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                 children: "✅ Approved"
             }, void 0, false, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 520,
+                lineNumber: 534,
                 columnNumber: 17
             }, this),
             refused: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1978,7 +1990,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                 children: "❌ Refused"
             }, void 0, false, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 521,
+                lineNumber: 535,
                 columnNumber: 16
             }, this),
             completed: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1986,7 +1998,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                 children: "🎉 Completed"
             }, void 0, false, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 522,
+                lineNumber: 536,
                 columnNumber: 18
             }, this)
         };
@@ -1994,7 +2006,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
             children: status
         }, void 0, false, {
             fileName: "[project]/components/dashboard-content.tsx",
-            lineNumber: 524,
+            lineNumber: 538,
             columnNumber: 53
         }, this);
     };
@@ -2031,9 +2043,15 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
         }
         setIsUploading(true);
         try {
-            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
+            // Generate unique filename to avoid conflicts
+            const timestamp = Date.now();
+            const randomId = Math.random().toString(36).substring(2, 8);
+            const fileExtension = file.name.split('.').pop();
+            const uniqueFileName = `store-cover-${timestamp}-${randomId}.${fileExtension}`;
+            const { url } = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(uniqueFileName, file, {
                 access: "public",
-                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP")
+                token: ("TURBOPACK compile-time value", "vercel_blob_rw_0SiZLuehI1QLh9O7_EoQBBemfqR1QwjdUS6HtlJokJNNKFP"),
+                addRandomSuffix: true
             });
             setStoreData((prev)=>({
                     ...prev,
@@ -2071,7 +2089,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                     className: "h-12 w-12 rounded-full object-cover"
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 589,
+                                    lineNumber: 610,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2084,7 +2102,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     children: "FarmEgg"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 592,
+                                                    lineNumber: 613,
                                                     columnNumber: 17
                                                 }, this),
                                                 storeData.store_name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -2094,14 +2112,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                             children: "·"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 595,
+                                                            lineNumber: 616,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: storeData.store_name
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 596,
+                                                            lineNumber: 617,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
@@ -2109,7 +2127,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 591,
+                                            lineNumber: 612,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2117,19 +2135,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             children: userEmail
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 600,
+                                            lineNumber: 621,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 590,
+                                    lineNumber: 611,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/dashboard-content.tsx",
-                            lineNumber: 588,
+                            lineNumber: 609,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2137,7 +2155,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$language$2d$theme$2d$switcher$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LanguageThemeSwitcher"], {}, void 0, false, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 604,
+                                    lineNumber: 625,
                                     columnNumber: 13
                                 }, this),
                                 userEmail === "motivationntm@gmail.com" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2149,14 +2167,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 607,
+                                            lineNumber: 628,
                                             columnNumber: 17
                                         }, this),
                                         t("dashboard.adminAnalytics")
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 606,
+                                    lineNumber: 627,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2168,14 +2186,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 612,
+                                            lineNumber: 633,
                                             columnNumber: 15
                                         }, this),
                                         t("dashboard.browseAsBuyer")
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 611,
+                                    lineNumber: 632,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2187,31 +2205,31 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 616,
+                                            lineNumber: 637,
                                             columnNumber: 15
                                         }, this),
                                         t("nav.logout")
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 615,
+                                    lineNumber: 636,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/dashboard-content.tsx",
-                            lineNumber: 603,
+                            lineNumber: 624,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/dashboard-content.tsx",
-                    lineNumber: 587,
+                    lineNumber: 608,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 586,
+                lineNumber: 607,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -2233,14 +2251,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                             className: "h-5 w-5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 631,
+                                                            lineNumber: 652,
                                                             columnNumber: 19
                                                         }, this),
                                                         t("dashboard.storeSettings.yourStore")
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 630,
+                                                    lineNumber: 651,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -2248,13 +2266,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     children: t("dashboard.storeSettings.manageStore")
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 634,
+                                                    lineNumber: 655,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 629,
+                                            lineNumber: 650,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -2271,19 +2289,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 className: "h-4 w-4 mr-2"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 644,
+                                                                lineNumber: 665,
                                                                 columnNumber: 21
                                                             }, this),
                                                             t("dashboard.storeSettings.button")
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 640,
+                                                        lineNumber: 661,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 639,
+                                                    lineNumber: 660,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -2295,20 +2313,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                     children: t("dashboard.storeSettings.title")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 650,
+                                                                    lineNumber: 671,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                                     children: t("dashboard.storeSettings.description")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 651,
+                                                                    lineNumber: 672,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 649,
+                                                            lineNumber: 670,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2325,7 +2343,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     children: t("dashboard.storeSettings.storeName")
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 656,
+                                                                                    lineNumber: 677,
                                                                                     columnNumber: 25
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -2338,13 +2356,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     placeholder: "My Awesome Store"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 657,
+                                                                                    lineNumber: 678,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 655,
+                                                                            lineNumber: 676,
                                                                             columnNumber: 23
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2355,7 +2373,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     children: t("dashboard.storeSettings.storeLogo")
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 665,
+                                                                                    lineNumber: 686,
                                                                                     columnNumber: 25
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2367,7 +2385,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             className: "h-16 w-16 rounded-lg object-cover border"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 668,
+                                                                                            lineNumber: 689,
                                                                                             columnNumber: 29
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2381,7 +2399,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                     disabled: isUploading
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                    lineNumber: 675,
+                                                                                                    lineNumber: 696,
                                                                                                     columnNumber: 29
                                                                                                 }, this),
                                                                                                 isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2389,25 +2407,25 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                     children: t("dashboard.storeSettings.uploading")
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                    lineNumber: 683,
+                                                                                                    lineNumber: 704,
                                                                                                     columnNumber: 31
                                                                                                 }, this)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 674,
+                                                                                            lineNumber: 695,
                                                                                             columnNumber: 27
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 666,
+                                                                                    lineNumber: 687,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 664,
+                                                                            lineNumber: 685,
                                                                             columnNumber: 23
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2418,7 +2436,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     children: t("dashboard.storeSettings.storeCover")
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 691,
+                                                                                    lineNumber: 712,
                                                                                     columnNumber: 25
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2432,12 +2450,12 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 className: "w-full h-full object-cover"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 695,
+                                                                                                lineNumber: 716,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 694,
+                                                                                            lineNumber: 715,
                                                                                             columnNumber: 29
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2450,7 +2468,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                     disabled: isUploading
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                    lineNumber: 703,
+                                                                                                    lineNumber: 724,
                                                                                                     columnNumber: 29
                                                                                                 }, this),
                                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2458,31 +2476,31 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                     children: t("dashboard.storeSettings.recommendedSize")
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                    lineNumber: 710,
+                                                                                                    lineNumber: 731,
                                                                                                     columnNumber: 29
                                                                                                 }, this)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 702,
+                                                                                            lineNumber: 723,
                                                                                             columnNumber: 27
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 692,
+                                                                                    lineNumber: 713,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 690,
+                                                                            lineNumber: 711,
                                                                             columnNumber: 23
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 654,
+                                                                    lineNumber: 675,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -2492,41 +2510,41 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                         children: isLoading ? t("dashboard.storeSettings.saving") : t("dashboard.storeSettings.saveButton")
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 718,
+                                                                        lineNumber: 739,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 717,
+                                                                    lineNumber: 738,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 653,
+                                                            lineNumber: 674,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 648,
+                                                    lineNumber: 669,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 638,
+                                            lineNumber: 659,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 628,
+                                    lineNumber: 649,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard-content.tsx",
-                                lineNumber: 627,
+                                lineNumber: 648,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2539,7 +2557,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                             className: "flex-1 bg-white dark:bg-slate-800"
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 729,
+                                            lineNumber: 750,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2550,18 +2568,18 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 className: "h-4 w-4 text-green-600"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 735,
+                                                lineNumber: 756,
                                                 columnNumber: 27
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__["Copy"], {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 735,
+                                                lineNumber: 756,
                                                 columnNumber: 74
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 734,
+                                            lineNumber: 755,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2576,29 +2594,29 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 746,
+                                                lineNumber: 767,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 737,
+                                            lineNumber: 758,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard-content.tsx",
-                                    lineNumber: 728,
+                                    lineNumber: 749,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard-content.tsx",
-                                lineNumber: 727,
+                                lineNumber: 748,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/dashboard-content.tsx",
-                        lineNumber: 626,
+                        lineNumber: 647,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -2613,7 +2631,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                         children: t("dashboard.tabs.products")
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 754,
+                                        lineNumber: 775,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -2624,7 +2642,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 className: "h-4 w-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 756,
+                                                lineNumber: 777,
                                                 columnNumber: 15
                                             }, this),
                                             t("dashboard.tabs.orders"),
@@ -2633,19 +2651,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 children: orders.filter((o)=>o.status === "pending").length
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 759,
+                                                lineNumber: 780,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 755,
+                                        lineNumber: 776,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/dashboard-content.tsx",
-                                lineNumber: 753,
+                                lineNumber: 774,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2665,20 +2683,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: t("dashboard.stats.totalProducts")
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 771,
+                                                                lineNumber: 792,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$package$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Package$3e$__["Package"], {
                                                                 className: "h-4 w-4 text-muted-foreground"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 772,
+                                                                lineNumber: 793,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 770,
+                                                        lineNumber: 791,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2688,7 +2706,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: products.length
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 775,
+                                                                lineNumber: 796,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2696,19 +2714,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: t("dashboard.stats.listedMarketplace")
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 776,
+                                                                lineNumber: 797,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 774,
+                                                        lineNumber: 795,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 769,
+                                                lineNumber: 790,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2721,20 +2739,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: t("dashboard.stats.avgPrice")
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 781,
+                                                                lineNumber: 802,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$dollar$2d$sign$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__DollarSign$3e$__["DollarSign"], {
                                                                 className: "h-4 w-4 text-muted-foreground"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 782,
+                                                                lineNumber: 803,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 780,
+                                                        lineNumber: 801,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2747,18 +2765,18 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 785,
+                                                            lineNumber: 806,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 784,
+                                                        lineNumber: 805,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 779,
+                                                lineNumber: 800,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2771,20 +2789,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: t("dashboard.stats.totalValue")
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 795,
+                                                                lineNumber: 816,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"], {
                                                                 className: "h-4 w-4 text-muted-foreground"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 796,
+                                                                lineNumber: 817,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 794,
+                                                        lineNumber: 815,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2797,24 +2815,24 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 799,
+                                                            lineNumber: 820,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 798,
+                                                        lineNumber: 819,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 793,
+                                                lineNumber: 814,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 768,
+                                        lineNumber: 789,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2825,7 +2843,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 children: t("dashboard.yourProducts")
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 808,
+                                                lineNumber: 829,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -2840,19 +2858,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                     className: "h-4 w-4 mr-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 812,
+                                                                    lineNumber: 833,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 t("dashboard.addProduct")
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 811,
+                                                            lineNumber: 832,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 810,
+                                                        lineNumber: 831,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -2864,20 +2882,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                         children: t("dashboard.addProduct")
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 818,
+                                                                        lineNumber: 839,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                                         children: "Create a new product listing for your store"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 819,
+                                                                        lineNumber: 840,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 817,
+                                                                lineNumber: 838,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2894,7 +2912,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.name")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 824,
+                                                                                        lineNumber: 845,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -2907,13 +2925,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 825,
+                                                                                        lineNumber: 846,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 823,
+                                                                                lineNumber: 844,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2924,7 +2942,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.description")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 833,
+                                                                                        lineNumber: 854,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -2936,13 +2954,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 834,
+                                                                                        lineNumber: 855,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 832,
+                                                                                lineNumber: 853,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2953,7 +2971,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.category")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 841,
+                                                                                        lineNumber: 862,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -2968,12 +2986,12 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                     placeholder: "Select a category"
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                    lineNumber: 847,
+                                                                                                    lineNumber: 868,
                                                                                                     columnNumber: 29
                                                                                                 }, this)
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 846,
+                                                                                                lineNumber: 867,
                                                                                                 columnNumber: 27
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -2983,7 +3001,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Eggs"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 850,
+                                                                                                        lineNumber: 871,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2991,7 +3009,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Poultry"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 851,
+                                                                                                        lineNumber: 872,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2999,7 +3017,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Dairy"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 852,
+                                                                                                        lineNumber: 873,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3007,7 +3025,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Vegetables"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 853,
+                                                                                                        lineNumber: 874,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3015,7 +3033,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Fruits"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 854,
+                                                                                                        lineNumber: 875,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3023,25 +3041,25 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Other"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 855,
+                                                                                                        lineNumber: 876,
                                                                                                         columnNumber: 29
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 849,
+                                                                                                lineNumber: 870,
                                                                                                 columnNumber: 27
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 842,
+                                                                                        lineNumber: 863,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 840,
+                                                                                lineNumber: 861,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3052,7 +3070,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.city")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 860,
+                                                                                        lineNumber: 881,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3065,7 +3083,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         placeholder: "e.g., Casablanca, Rabat, Marrakech"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 861,
+                                                                                        lineNumber: 882,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3073,13 +3091,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.cityHelper")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 867,
+                                                                                        lineNumber: 888,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 859,
+                                                                                lineNumber: 880,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3090,7 +3108,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.price")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 870,
+                                                                                        lineNumber: 891,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3106,7 +3124,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         placeholder: "e.g., 150.00"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 871,
+                                                                                        lineNumber: 892,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3114,13 +3132,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.priceHelper")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 880,
+                                                                                        lineNumber: 901,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 869,
+                                                                                lineNumber: 890,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3131,7 +3149,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.stock")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 883,
+                                                                                        lineNumber: 904,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3145,13 +3163,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 884,
+                                                                                        lineNumber: 905,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 882,
+                                                                                lineNumber: 903,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3162,7 +3180,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                         children: t("dashboard.product.image")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 893,
+                                                                                        lineNumber: 914,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3174,7 +3192,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 className: "h-32 w-full rounded-lg object-cover border"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 896,
+                                                                                                lineNumber: 917,
                                                                                                 columnNumber: 29
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3189,20 +3207,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         className: "flex-1"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 903,
+                                                                                                        lineNumber: 924,
                                                                                                         columnNumber: 29
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$upload$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Upload$3e$__["Upload"], {
                                                                                                         className: "h-4 w-4 self-center text-muted-foreground"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 911,
+                                                                                                        lineNumber: 932,
                                                                                                         columnNumber: 29
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 902,
+                                                                                                lineNumber: 923,
                                                                                                 columnNumber: 27
                                                                                             }, this),
                                                                                             isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3210,25 +3228,25 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 children: t("dashboard.product.uploading")
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 914,
+                                                                                                lineNumber: 935,
                                                                                                 columnNumber: 29
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 894,
+                                                                                        lineNumber: 915,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 892,
+                                                                                lineNumber: 913,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 822,
+                                                                        lineNumber: 843,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -3238,36 +3256,36 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             children: isLoading ? t("dashboard.product.adding") : t("dashboard.product.addButton")
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 920,
+                                                                            lineNumber: 941,
                                                                             columnNumber: 23
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 919,
+                                                                        lineNumber: 940,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 821,
+                                                                lineNumber: 842,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 816,
+                                                        lineNumber: 837,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 809,
+                                                lineNumber: 830,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 807,
+                                        lineNumber: 828,
                                         columnNumber: 13
                                     }, this),
                                     products.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -3278,7 +3296,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     className: "h-12 w-12 text-muted-foreground mb-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 933,
+                                                    lineNumber: 954,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3286,18 +3304,18 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     children: t("dashboard.noProducts")
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 934,
+                                                    lineNumber: 955,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 932,
+                                            lineNumber: 953,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 931,
+                                        lineNumber: 952,
                                         columnNumber: 15
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "grid gap-4 md:grid-cols-2 lg:grid-cols-3",
@@ -3312,12 +3330,12 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                             className: "h-full w-full object-cover"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 943,
+                                                            lineNumber: 964,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 942,
+                                                        lineNumber: 963,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
@@ -3330,7 +3348,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                         children: product.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 952,
+                                                                        lineNumber: 973,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3342,7 +3360,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                 children: product.category
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 955,
+                                                                                lineNumber: 976,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             product.city && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3351,19 +3369,19 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                 children: product.city
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 960,
+                                                                                lineNumber: 981,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 953,
+                                                                        lineNumber: 974,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 951,
+                                                                lineNumber: 972,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -3371,13 +3389,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                 children: product.description || "No description"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 966,
+                                                                lineNumber: 987,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 950,
+                                                        lineNumber: 971,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3395,18 +3413,18 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             children: product.stock
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 974,
+                                                                            lineNumber: 995,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 972,
+                                                                    lineNumber: 993,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 971,
+                                                                lineNumber: 992,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3421,7 +3439,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 978,
+                                                                        lineNumber: 999,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3446,17 +3464,17 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 className: "h-4 w-4"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 993,
+                                                                                                lineNumber: 1014,
                                                                                                 columnNumber: 33
                                                                                             }, this)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 992,
+                                                                                            lineNumber: 1013,
                                                                                             columnNumber: 31
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 991,
+                                                                                        lineNumber: 1012,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -3468,20 +3486,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: t("dashboard.product.editTitle")
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 998,
+                                                                                                        lineNumber: 1019,
                                                                                                         columnNumber: 33
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                                                                         children: "Update your product details"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 999,
+                                                                                                        lineNumber: 1020,
                                                                                                         columnNumber: 33
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 997,
+                                                                                                lineNumber: 1018,
                                                                                                 columnNumber: 31
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -3498,7 +3516,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.name")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1004,
+                                                                                                                        lineNumber: 1025,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3511,13 +3529,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                             })
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1005,
+                                                                                                                        lineNumber: 1026,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1003,
+                                                                                                                lineNumber: 1024,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3528,7 +3546,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.description")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1013,
+                                                                                                                        lineNumber: 1034,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -3540,13 +3558,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                             })
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1014,
+                                                                                                                        lineNumber: 1035,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1012,
+                                                                                                                lineNumber: 1033,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3557,7 +3575,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.category")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1021,
+                                                                                                                        lineNumber: 1042,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -3572,12 +3590,12 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                     placeholder: "Select a category"
                                                                                                                                 }, void 0, false, {
                                                                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                    lineNumber: 1027,
+                                                                                                                                    lineNumber: 1048,
                                                                                                                                     columnNumber: 41
                                                                                                                                 }, this)
                                                                                                                             }, void 0, false, {
                                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                lineNumber: 1026,
+                                                                                                                                lineNumber: 1047,
                                                                                                                                 columnNumber: 39
                                                                                                                             }, this),
                                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -3587,7 +3605,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Eggs"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1030,
+                                                                                                                                        lineNumber: 1051,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3595,7 +3613,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Poultry"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1031,
+                                                                                                                                        lineNumber: 1052,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3603,7 +3621,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Dairy"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1032,
+                                                                                                                                        lineNumber: 1053,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3611,7 +3629,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Vegetables"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1033,
+                                                                                                                                        lineNumber: 1054,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3619,7 +3637,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Fruits"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1034,
+                                                                                                                                        lineNumber: 1055,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3627,25 +3645,25 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         children: "Other"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1035,
+                                                                                                                                        lineNumber: 1056,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this)
                                                                                                                                 ]
                                                                                                                             }, void 0, true, {
                                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                lineNumber: 1029,
+                                                                                                                                lineNumber: 1050,
                                                                                                                                 columnNumber: 39
                                                                                                                             }, this)
                                                                                                                         ]
                                                                                                                     }, void 0, true, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1022,
+                                                                                                                        lineNumber: 1043,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1020,
+                                                                                                                lineNumber: 1041,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3656,7 +3674,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.city")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1040,
+                                                                                                                        lineNumber: 1061,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3669,7 +3687,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         placeholder: "e.g., Casablanca, Rabat, Marrakech"
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1041,
+                                                                                                                        lineNumber: 1062,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3677,13 +3695,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.cityHelper")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1047,
+                                                                                                                        lineNumber: 1068,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1039,
+                                                                                                                lineNumber: 1060,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3694,7 +3712,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.price")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1050,
+                                                                                                                        lineNumber: 1071,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3709,7 +3727,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                             })
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1051,
+                                                                                                                        lineNumber: 1072,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3717,13 +3735,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.priceHelper")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1059,
+                                                                                                                        lineNumber: 1080,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1049,
+                                                                                                                lineNumber: 1070,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3734,7 +3752,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.stock")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1064,
+                                                                                                                        lineNumber: 1085,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3748,13 +3766,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                             })
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1065,
+                                                                                                                        lineNumber: 1086,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1063,
+                                                                                                                lineNumber: 1084,
                                                                                                                 columnNumber: 35
                                                                                                             }, this),
                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3765,7 +3783,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                         children: t("dashboard.product.image")
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1074,
+                                                                                                                        lineNumber: 1095,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3777,7 +3795,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                 className: "h-32 w-full rounded-lg object-cover border"
                                                                                                                             }, void 0, false, {
                                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                lineNumber: 1077,
+                                                                                                                                lineNumber: 1098,
                                                                                                                                 columnNumber: 41
                                                                                                                             }, this),
                                                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3792,20 +3810,20 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                         className: "flex-1"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1084,
+                                                                                                                                        lineNumber: 1105,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this),
                                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$upload$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Upload$3e$__["Upload"], {
                                                                                                                                         className: "h-4 w-4 self-center text-muted-foreground"
                                                                                                                                     }, void 0, false, {
                                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                        lineNumber: 1092,
+                                                                                                                                        lineNumber: 1113,
                                                                                                                                         columnNumber: 41
                                                                                                                                     }, this)
                                                                                                                                 ]
                                                                                                                             }, void 0, true, {
                                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                lineNumber: 1083,
+                                                                                                                                lineNumber: 1104,
                                                                                                                                 columnNumber: 39
                                                                                                                             }, this),
                                                                                                                             isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3813,25 +3831,25 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                                                 children: t("dashboard.product.uploading")
                                                                                                                             }, void 0, false, {
                                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                                lineNumber: 1095,
+                                                                                                                                lineNumber: 1116,
                                                                                                                                 columnNumber: 41
                                                                                                                             }, this)
                                                                                                                         ]
                                                                                                                     }, void 0, true, {
                                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                        lineNumber: 1075,
+                                                                                                                        lineNumber: 1096,
                                                                                                                         columnNumber: 37
                                                                                                                     }, this)
                                                                                                                 ]
                                                                                                             }, void 0, true, {
                                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                                lineNumber: 1073,
+                                                                                                                lineNumber: 1094,
                                                                                                                 columnNumber: 35
                                                                                                             }, this)
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1002,
+                                                                                                        lineNumber: 1023,
                                                                                                         columnNumber: 33
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -3841,30 +3859,30 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                             children: isLoading ? t("dashboard.product.saving") : t("dashboard.product.saveChanges")
                                                                                                         }, void 0, false, {
                                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                            lineNumber: 1103,
+                                                                                                            lineNumber: 1124,
                                                                                                             columnNumber: 35
                                                                                                         }, this)
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1102,
+                                                                                                        lineNumber: 1123,
                                                                                                         columnNumber: 33
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1001,
+                                                                                                lineNumber: 1022,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 996,
+                                                                                        lineNumber: 1017,
                                                                                         columnNumber: 29
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 982,
+                                                                                lineNumber: 1003,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3879,47 +3897,47 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     className: "h-4 w-4"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1119,
+                                                                                    lineNumber: 1140,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                lineNumber: 1110,
+                                                                                lineNumber: 1131,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                        lineNumber: 981,
+                                                                        lineNumber: 1002,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                lineNumber: 977,
+                                                                lineNumber: 998,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 970,
+                                                        lineNumber: 991,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, product.id, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 940,
+                                                lineNumber: 961,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 938,
+                                        lineNumber: 959,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/dashboard-content.tsx",
-                                lineNumber: 766,
+                                lineNumber: 787,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -3934,7 +3952,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 children: t("dashboard.orders.title")
                                             }, void 0, false, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 1132,
+                                                lineNumber: 1153,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3946,13 +3964,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 1133,
+                                                lineNumber: 1154,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 1131,
+                                        lineNumber: 1152,
                                         columnNumber: 13
                                     }, this),
                                     orders.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -3963,7 +3981,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     className: "h-12 w-12 text-muted-foreground mb-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 1141,
+                                                    lineNumber: 1162,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3971,18 +3989,18 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                     children: t("dashboard.orders.noOrders")
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                    lineNumber: 1142,
+                                                    lineNumber: 1163,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/dashboard-content.tsx",
-                                            lineNumber: 1140,
+                                            lineNumber: 1161,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 1139,
+                                        lineNumber: 1160,
                                         columnNumber: 15
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "grid gap-4",
@@ -4001,7 +4019,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             className: "h-20 w-20 rounded-lg object-cover"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1153,
+                                                                            lineNumber: 1174,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4011,7 +4029,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     children: order.products.name
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1160,
+                                                                                    lineNumber: 1181,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -4028,7 +4046,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1164,
+                                                                                                        lineNumber: 1185,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4036,7 +4054,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1163,
+                                                                                                lineNumber: 1184,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4045,7 +4063,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Email:"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1167,
+                                                                                                        lineNumber: 1188,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4053,7 +4071,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1166,
+                                                                                                lineNumber: 1187,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4062,7 +4080,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         children: "Phone:"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1170,
+                                                                                                        lineNumber: 1191,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4070,7 +4088,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1169,
+                                                                                                lineNumber: 1190,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4082,7 +4100,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1173,
+                                                                                                        lineNumber: 1194,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4090,7 +4108,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1172,
+                                                                                                lineNumber: 1193,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4102,7 +4120,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1176,
+                                                                                                        lineNumber: 1197,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4112,7 +4130,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1175,
+                                                                                                lineNumber: 1196,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4124,7 +4142,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                        lineNumber: 1180,
+                                                                                                        lineNumber: 1201,
                                                                                                         columnNumber: 35
                                                                                                     }, this),
                                                                                                     " ",
@@ -4132,30 +4150,30 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                                                                lineNumber: 1179,
+                                                                                                lineNumber: 1200,
                                                                                                 columnNumber: 33
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                                                        lineNumber: 1162,
+                                                                                        lineNumber: 1183,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1161,
+                                                                                    lineNumber: 1182,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1159,
+                                                                            lineNumber: 1180,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 1151,
+                                                                    lineNumber: 1172,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4167,24 +4185,24 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             children: new Date(order.created_at).toLocaleDateString()
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1188,
+                                                                            lineNumber: 1209,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 1186,
+                                                                    lineNumber: 1207,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 1150,
+                                                            lineNumber: 1171,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 1149,
+                                                        lineNumber: 1170,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4202,7 +4220,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1197,
+                                                                            lineNumber: 1218,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4210,13 +4228,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             children: order.buyer_address
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1198,
+                                                                            lineNumber: 1219,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 1196,
+                                                                    lineNumber: 1217,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 order.notes && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4230,7 +4248,7 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1202,
+                                                                            lineNumber: 1223,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4238,13 +4256,13 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                             children: order.notes
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1203,
+                                                                            lineNumber: 1224,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 1201,
+                                                                    lineNumber: 1222,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4261,14 +4279,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             className: "h-4 w-4 mr-2"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 1214,
+                                                                                            lineNumber: 1235,
                                                                                             columnNumber: 33
                                                                                         }, this),
                                                                                         t("dashboard.orders.acceptOrder")
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1209,
+                                                                                    lineNumber: 1230,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4281,14 +4299,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                             className: "h-4 w-4 mr-2"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                                            lineNumber: 1223,
+                                                                                            lineNumber: 1244,
                                                                                             columnNumber: 33
                                                                                         }, this),
                                                                                         t("dashboard.orders.refuse")
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1217,
+                                                                                    lineNumber: 1238,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             ]
@@ -4302,14 +4320,14 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     className: "h-4 w-4 mr-2"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1234,
+                                                                                    lineNumber: 1255,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 t("dashboard.orders.markCompleted")
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1229,
+                                                                            lineNumber: 1250,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4325,66 +4343,66 @@ function DashboardContent({ initialProducts, userEmail, userId, profile }) {
                                                                                     className: "h-4 w-4 mr-2"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                                    lineNumber: 1247,
+                                                                                    lineNumber: 1268,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 t("dashboard.orders.delete")
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                                            lineNumber: 1238,
+                                                                            lineNumber: 1259,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/dashboard-content.tsx",
-                                                                    lineNumber: 1206,
+                                                                    lineNumber: 1227,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/dashboard-content.tsx",
-                                                            lineNumber: 1195,
+                                                            lineNumber: 1216,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/dashboard-content.tsx",
-                                                        lineNumber: 1194,
+                                                        lineNumber: 1215,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, order.id, true, {
                                                 fileName: "[project]/components/dashboard-content.tsx",
-                                                lineNumber: 1148,
+                                                lineNumber: 1169,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard-content.tsx",
-                                        lineNumber: 1146,
+                                        lineNumber: 1167,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/dashboard-content.tsx",
-                                lineNumber: 1130,
+                                lineNumber: 1151,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/dashboard-content.tsx",
-                        lineNumber: 752,
+                        lineNumber: 773,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/dashboard-content.tsx",
-                lineNumber: 624,
+                lineNumber: 645,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/dashboard-content.tsx",
-        lineNumber: 585,
+        lineNumber: 606,
         columnNumber: 5
     }, this);
 }

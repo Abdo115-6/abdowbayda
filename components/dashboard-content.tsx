@@ -712,7 +712,6 @@ export default function DashboardContent({
       const { url } = await put(uniqueFileName, file, {
         access: "public",
         token: blobToken,
-        addRandomSuffix: true, // This adds another layer of uniqueness
       })
       
       console.log("[COVER-UPLOAD] Upload successful:", url)

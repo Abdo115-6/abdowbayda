@@ -212,6 +212,21 @@ export default function DashboardContent({
     }
 
     setIsUploading(true)
+    
+    // Check if blob token is available
+    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+    console.log("[UPLOAD] Blob token available:", !!blobToken)
+    
+    if (!blobToken) {
+      toast({
+        title: "Upload configuration error",
+        description: "Blob storage token not configured. Please check environment variables.",
+        variant: "destructive",
+      })
+      setIsUploading(false)
+      return
+    }
+
     try {
       // Generate unique filename to avoid conflicts
       const timestamp = Date.now()
@@ -219,21 +234,33 @@ export default function DashboardContent({
       const fileExtension = file.name.split('.').pop()
       const uniqueFileName = `product-${timestamp}-${randomId}.${fileExtension}`
       
-      const { url } = await put(uniqueFileName, file, {
+      console.log("[UPLOAD] Starting upload:", uniqueFileName)
+      
+      // Add timeout to prevent hanging uploads
+      const uploadPromise = put(uniqueFileName, file, {
         access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        token: blobToken,
         addRandomSuffix: true, // This adds another layer of uniqueness
       })
+      
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Upload timeout after 30 seconds')), 30000)
+      )
+      
+      const { url } = await Promise.race([uploadPromise, timeoutPromise]) as { url: string }
+      
+      console.log("[UPLOAD] Upload successful:", url)
+      
       setFormData((prev) => ({ ...prev, image_url: url }))
       toast({
         title: "Image uploaded successfully!",
         variant: "default",
       })
     } catch (error) {
-      console.error("[v0] Error uploading image:", error)
+      console.error("[UPLOAD] Error uploading image:", error)
       toast({
         title: "Failed to upload image",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Upload failed. Please try again or contact support.",
         variant: "destructive",
       })
     } finally {
@@ -276,6 +303,21 @@ export default function DashboardContent({
     }
 
     setIsUploading(true)
+    
+    // Check if blob token is available
+    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+    console.log("[LOGO-UPLOAD] Blob token available:", !!blobToken)
+    
+    if (!blobToken) {
+      toast({
+        title: "Upload configuration error",
+        description: "Blob storage token not configured. Please check environment variables.",
+        variant: "destructive",
+      })
+      setIsUploading(false)
+      return
+    }
+
     try {
       // Generate unique filename to avoid conflicts
       const timestamp = Date.now()
@@ -283,21 +325,26 @@ export default function DashboardContent({
       const fileExtension = file.name.split('.').pop()
       const uniqueFileName = `store-logo-${timestamp}-${randomId}.${fileExtension}`
       
+      console.log("[LOGO-UPLOAD] Starting upload:", uniqueFileName)
+      
       const { url } = await put(uniqueFileName, file, {
         access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        token: blobToken,
         addRandomSuffix: true, // This adds another layer of uniqueness
       })
+      
+      console.log("[LOGO-UPLOAD] Upload successful:", url)
+      
       setStoreData((prev) => ({ ...prev, store_logo_url: url }))
       toast({
         title: "Logo uploaded successfully!",
         variant: "default",
       })
     } catch (error) {
-      console.error("[v0] Error uploading logo:", error)
+      console.error("[LOGO-UPLOAD] Error uploading logo:", error)
       toast({
         title: "Failed to upload logo",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Upload failed. Please try again or contact support.",
         variant: "destructive",
       })
     } finally {
@@ -573,6 +620,21 @@ export default function DashboardContent({
     }
 
     setIsUploading(true)
+    
+    // Check if blob token is available
+    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+    console.log("[COVER-UPLOAD] Blob token available:", !!blobToken)
+    
+    if (!blobToken) {
+      toast({
+        title: "Upload configuration error",
+        description: "Blob storage token not configured. Please check environment variables.",
+        variant: "destructive",
+      })
+      setIsUploading(false)
+      return
+    }
+
     try {
       // Generate unique filename to avoid conflicts
       const timestamp = Date.now()
@@ -580,21 +642,26 @@ export default function DashboardContent({
       const fileExtension = file.name.split('.').pop()
       const uniqueFileName = `store-cover-${timestamp}-${randomId}.${fileExtension}`
       
+      console.log("[COVER-UPLOAD] Starting upload:", uniqueFileName)
+      
       const { url } = await put(uniqueFileName, file, {
         access: "public",
-        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+        token: blobToken,
         addRandomSuffix: true, // This adds another layer of uniqueness
       })
+      
+      console.log("[COVER-UPLOAD] Upload successful:", url)
+      
       setStoreData((prev) => ({ ...prev, store_cover_url: url }))
       toast({
         title: "Cover image uploaded successfully!",
         variant: "default",
       })
     } catch (error) {
-      console.error("[v0] Error uploading cover:", error)
+      console.error("[COVER-UPLOAD] Error uploading cover:", error)
       toast({
         title: "Failed to upload cover image",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Upload failed. Please try again or contact support.",
         variant: "destructive",
       })
     } finally {

@@ -40,6 +40,9 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
   const router = useRouter()
   const supabase = createClient()
 
+  // Log component initialization for debugging
+  console.log("[CHECKOUT-FORM] Initialized with product:", product?.name, "userId:", userId)
+
   const totalPrice = (Number.parseFloat(product.price) * quantity).toFixed(2)
 
   const handleSubmit = async (e: React.FormEvent) => {

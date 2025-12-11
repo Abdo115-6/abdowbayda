@@ -3,35 +3,50 @@ import { notFound, redirect } from "next/navigation"
 import CheckoutForm from "@/components/checkout-form"
 
 export default async function CheckoutPage({ params }: { params: { productId: string } }) {
-  const supabase = await createClient()
-  const { productId } = await params
+  try {
+    const supabase = await createClient()
+    const { productId } = await params
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    console.log("[CHECKOUT] Product ID:", productId)
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  const { data: product, error } = await supabase
-    .from("products")
-    .select(`
-      *,
-      profiles (
-        store_name,
-        store_logo_url
-      )
-    `)
-    .eq("id", productId)
-    .single()
+    if (!user) {
+      console.log("[CHECKOUT] User not authenticated, redirecting to login")
+      redirect("/auth/login")
+    }
 
-  if (error || !product) {
-    console.error("[v0] Error fetching product:", error)
+    console.log("[CHECKOUT] User authenticated:", user.id)
+
+    const { data: product, error } = await supabase
+      .from("products")
+      .select(`
+        *,
+        profiles (
+          store_name,
+          store_logo_url
+        )
+      `)
+      .eq("id", productId)
+      .single()
+
+    if (error) {
+      console.error("[CHECKOUT] Error fetching product:", error)
+      notFound()
+    }
+
+    if (!product) {
+      console.error("[CHECKOUT] Product not found for ID:", productId)
+      notFound()
+    }
+
+    console.log("[CHECKOUT] Product found:", product.name)
+
+    return <CheckoutForm product={product} userId={user.id} />
+  } catch (error) {
+    console.error("[CHECKOUT] Unexpected error:", error)
     notFound()
   }
-
-  console.log("[v0] Product with profile:", product)
-
-  return <CheckoutForm product={product} userId={user.id} />
 }

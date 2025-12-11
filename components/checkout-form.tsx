@@ -69,28 +69,39 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         return
       }
 
-      // Get the current user's email
-      const { data: { user } } = await supabase.auth.getUser()
+      // Get the current user's email and verify authentication
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      console.log("[DEBUG] User auth check:", { user: user?.id, error: userError })
+      
+      if (!user) {
+        setError("Authentication required. Please log in and try again.")
+        setIsLoading(false)
+        return
+      }
+      
       const userEmail = user?.email || `user-${userId}@placeholder.com`
 
       console.log("[DEBUG] Creating order with data:", {
         seller_id: product.seller_id,
         product_id: product.id,
+        buyer_id: userId,
+        buyer_email: userEmail,
         quantity,
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",
         status: "pending",
         buyer_name: formData.name,
-        buyer_email: userEmail,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
       })
 
-      // Insert order with buyer_id to satisfy database constraints - v1.1
+      // Insert order with buyer_id and buyer_email - v1.2
       const { data: orderData, error: insertError } = await supabase.from("orders").insert({
         seller_id: product.seller_id,
         product_id: product.id,
         buyer_id: userId, // Add buyer_id to satisfy NOT NULL constraint
+        buyer_email: userEmail, // Add buyer_email for contact information
         quantity,
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",
@@ -98,7 +109,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_name: formData.name,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
-        // notes: `Order by user: ${userId}, Email: ${userEmail}`, // Temporarily removed - missing column in DB
+        // notes: `Order by user: ${userId}, Email: ${userEmail}`, // Will be added back once database is updated
       }).select()
 
       console.log("[DEBUG] Order insert result:", { orderData, insertError })

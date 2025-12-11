@@ -204,14 +204,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$serv
 ;
 async function POST(request) {
     try {
-        if (!process.env.BLOB_READ_WRITE_TOKEN) {
-            console.error("BLOB_READ_WRITE_TOKEN is not configured");
-            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: "Upload service not configured"
-            }, {
-                status: 500
-            });
-        }
         const formData = await request.formData();
         const file = formData.get("file");
         if (!file) {
@@ -237,16 +229,36 @@ async function POST(request) {
                 status: 400
             });
         }
-        // Upload to Vercel Blob
-        const blob = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
-            access: "public",
-            token: process.env.BLOB_READ_WRITE_TOKEN
-        });
+        // Try Vercel Blob first, fall back to base64 if not available
+        if (process.env.BLOB_READ_WRITE_TOKEN) {
+            try {
+                const blob = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
+                    access: "public",
+                    token: process.env.BLOB_READ_WRITE_TOKEN
+                });
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    url: blob.url,
+                    filename: file.name,
+                    size: file.size,
+                    type: file.type
+                });
+            } catch (blobError) {
+                console.error("[v0] Blob upload failed:", blobError);
+            // Fall through to alternative method
+            }
+        }
+        // Alternative: Convert to base64 data URL (temporary solution)
+        console.log("[v0] Using fallback base64 upload method");
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const base64 = buffer.toString('base64');
+        const dataUrl = `data:${file.type};base64,${base64}`;
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            url: blob.url,
+            url: dataUrl,
             filename: file.name,
             size: file.size,
-            type: file.type
+            type: file.type,
+            fallback: true
         });
     } catch (error) {
         console.error("[v0] Upload error:", error);

@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/language-context"
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useId } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -108,6 +108,12 @@ export default function DashboardContent({
   const supabase = createClient()
   const { toast } = useToast()
   const { t } = useLanguage()
+  
+  // Generate stable IDs for components to prevent hydration mismatch
+  const tabsId = useId()
+  const storeDialogId = useId()
+  const addDialogId = useId()
+  const editDialogId = useId()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -685,7 +691,7 @@ export default function DashboardContent({
                   {t("dashboard.storeSettings.manageStore")}
                 </CardDescription>
               </div>
-              <Dialog open={isStoreDialogOpen} onOpenChange={setIsStoreDialogOpen}>
+              <Dialog open={isStoreDialogOpen} onOpenChange={setIsStoreDialogOpen} key={storeDialogId}>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -799,7 +805,7 @@ export default function DashboardContent({
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="products" className="space-y-6">
+        <Tabs defaultValue="products" className="space-y-6" key={tabsId}>
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="products">{t("dashboard.tabs.products")}</TabsTrigger>
             <TabsTrigger value="orders" className="relative">
@@ -856,7 +862,7 @@ export default function DashboardContent({
 
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">{t("dashboard.yourProducts")}</h2>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} key={addDialogId}>
                 <DialogTrigger asChild>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
@@ -1030,6 +1036,7 @@ export default function DashboardContent({
                         </span>
                         <div className="flex gap-2">
                           <Dialog
+                            key={`${editDialogId}-${product.id}`}
                             open={editingProduct?.id === product.id}
                             onOpenChange={(open) => {
                               if (!open) {

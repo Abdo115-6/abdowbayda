@@ -3,11 +3,6 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      console.error("BLOB_READ_WRITE_TOKEN is not configured")
-      return NextResponse.json({ error: "Upload service not configured" }, { status: 500 })
-    }
-
     const formData = await request.formData()
     const file = formData.get("file") as File
 
@@ -24,17 +19,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 })
     }
 
-    // Upload to Vercel Blob
-    const blob = await put(file.name, file, {
-      access: "public",
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    })
+    // Try Vercel Blob first, fall back to base64 if not available
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const blob = await put(file.name, file, {
+          access: "public",
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        })
+
+        return NextResponse.json({
+          url: blob.url,
+          filename: file.name,
+          size: file.size,
+          type: file.type,
+        })
+      } catch (blobError) {
+        console.error("[v0] Blob upload failed:", blobError)
+        // Fall through to alternative method
+      }
+    }
+
+    // Alternative: Convert to base64 data URL (temporary solution)
+    console.log("[v0] Using fallback base64 upload method")
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    const base64 = buffer.toString('base64')
+    const dataUrl = `data:${file.type};base64,${base64}`
 
     return NextResponse.json({
-      url: blob.url,
+      url: dataUrl,
       filename: file.name,
       size: file.size,
       type: file.type,
+      fallback: true,
     })
   } catch (error) {
     console.error("[v0] Upload error:", error)

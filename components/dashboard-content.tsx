@@ -44,7 +44,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LanguageThemeSwitcher } from "@/components/language-theme-switcher"
-import { put } from "@vercel/blob"
 import { useToast } from "@/hooks/use-toast"
 
 type Product = {
@@ -213,78 +212,32 @@ export default function DashboardContent({
 
     setIsUploading(true)
     
-    // Check if blob token is available
-    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
-    console.log("[UPLOAD] Blob token available:", !!blobToken)
+    console.log("[UPLOAD] Starting upload via API route")
     console.log("[UPLOAD] File size:", (file.size / 1024 / 1024).toFixed(2), "MB")
-    
-    if (!blobToken) {
-      toast({
-        title: "Upload configuration error",
-        description: "Blob storage token not configured. Please check environment variables.",
-        variant: "destructive",
-      })
-      setIsUploading(false)
-      return
-    }
 
     try {
-      // Generate unique filename to avoid conflicts
-      const timestamp = Date.now()
-      const randomId = Math.random().toString(36).substring(2, 8)
-      const fileExtension = file.name.split('.').pop()
-      const uniqueFileName = `product-${timestamp}-${randomId}.${fileExtension}`
+      // Use API route for reliable uploads
+      const formData = new FormData()
+      formData.append('file', file)
       
-      console.log("[UPLOAD] Starting upload:", uniqueFileName)
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
       
-      // Try direct upload with shorter timeout first
-      let uploadSuccessful = false
-      let url: string
-      
-      try {
-        // First attempt with 15 second timeout
-        const uploadPromise = put(uniqueFileName, file, {
-          access: "public",
-          token: blobToken,
-        })
-        
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Upload timeout after 15 seconds')), 15000)
-        )
-        
-        const result = await Promise.race([uploadPromise, timeoutPromise])
-        url = result.url
-        uploadSuccessful = true
-        console.log("[UPLOAD] Direct upload successful:", url)
-      } catch (directUploadError) {
-        console.log("[UPLOAD] Direct upload failed, trying fallback:", directUploadError)
-        
-        // Fallback: Try using API route
-        const formData = new FormData()
-        formData.append('file', file)
-        
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        })
-        
-        if (!response.ok) {
-          throw new Error(`API upload failed: ${response.statusText}`)
-        }
-        
-        const data = await response.json()
-        url = data.url
-        uploadSuccessful = true
-        console.log("[UPLOAD] API upload successful:", url)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Upload failed: ${response.statusText}`)
       }
       
-      if (uploadSuccessful) {
-        setFormData((prev) => ({ ...prev, image_url: url }))
-        toast({
-          title: "Image uploaded successfully!",
-          variant: "default",
-        })
-      }
+      const data = await response.json()
+      console.log("[UPLOAD] API upload successful:", data.url)
+      
+      setFormData((prev) => ({ ...prev, image_url: data.url }))
+      toast({
+        title: "Image uploaded successfully!",
+        variant: "default",
+      })
     } catch (error) {
       console.error("[UPLOAD] Error uploading image:", error)
       toast({
@@ -333,78 +286,32 @@ export default function DashboardContent({
 
     setIsUploading(true)
     
-    // Check if blob token is available
-    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
-    console.log("[LOGO-UPLOAD] Blob token available:", !!blobToken)
-    
-    if (!blobToken) {
-      toast({
-        title: "Upload configuration error",
-        description: "Blob storage token not configured. Please check environment variables.",
-        variant: "destructive",
-      })
-      setIsUploading(false)
-      return
-    }
+    console.log("[LOGO-UPLOAD] Starting upload via API route")
+    console.log("[LOGO-UPLOAD] File size:", (file.size / 1024 / 1024).toFixed(2), "MB")
 
     try {
-      // Generate unique filename to avoid conflicts
-      const timestamp = Date.now()
-      const randomId = Math.random().toString(36).substring(2, 8)
-      const fileExtension = file.name.split('.').pop()
-      const uniqueFileName = `store-logo-${timestamp}-${randomId}.${fileExtension}`
+      // Use API route for reliable uploads
+      const formData = new FormData()
+      formData.append('file', file)
       
-      console.log("[LOGO-UPLOAD] Starting upload:", uniqueFileName)
-      console.log("[LOGO-UPLOAD] File size:", (file.size / 1024 / 1024).toFixed(2), "MB")
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
       
-      // Try direct upload with timeout and fallback
-      let uploadSuccessful = false
-      let url: string
-      
-      try {
-        // First attempt with 15 second timeout
-        const uploadPromise = put(uniqueFileName, file, {
-          access: "public",
-          token: blobToken,
-        })
-        
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Upload timeout after 15 seconds')), 15000)
-        )
-        
-        const result = await Promise.race([uploadPromise, timeoutPromise])
-        url = result.url
-        uploadSuccessful = true
-        console.log("[LOGO-UPLOAD] Direct upload successful:", url)
-      } catch (directUploadError) {
-        console.log("[LOGO-UPLOAD] Direct upload failed, trying fallback:", directUploadError)
-        
-        // Fallback: Try using API route
-        const formData = new FormData()
-        formData.append('file', file)
-        
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        })
-        
-        if (!response.ok) {
-          throw new Error(`API upload failed: ${response.statusText}`)
-        }
-        
-        const data = await response.json()
-        url = data.url
-        uploadSuccessful = true
-        console.log("[LOGO-UPLOAD] API upload successful:", url)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Upload failed: ${response.statusText}`)
       }
       
-      if (uploadSuccessful) {
-        setStoreData((prev) => ({ ...prev, store_logo_url: url }))
-        toast({
-          title: "Logo uploaded successfully!",
-          variant: "default",
-        })
-      }
+      const data = await response.json()
+      console.log("[LOGO-UPLOAD] API upload successful:", data.url)
+      
+      setStoreData((prev) => ({ ...prev, store_logo_url: data.url }))
+      toast({
+        title: "Logo uploaded successfully!",
+        variant: "default",
+      })
     } catch (error) {
       console.error("[LOGO-UPLOAD] Error uploading logo:", error)
       toast({
@@ -686,37 +593,28 @@ export default function DashboardContent({
 
     setIsUploading(true)
     
-    // Check if blob token is available
-    const blobToken = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
-    console.log("[COVER-UPLOAD] Blob token available:", !!blobToken)
-    
-    if (!blobToken) {
-      toast({
-        title: "Upload configuration error",
-        description: "Blob storage token not configured. Please check environment variables.",
-        variant: "destructive",
-      })
-      setIsUploading(false)
-      return
-    }
+    console.log("[COVER-UPLOAD] Starting upload via API route")
+    console.log("[COVER-UPLOAD] File size:", (file.size / 1024 / 1024).toFixed(2), "MB")
 
     try {
-      // Generate unique filename to avoid conflicts
-      const timestamp = Date.now()
-      const randomId = Math.random().toString(36).substring(2, 8)
-      const fileExtension = file.name.split('.').pop()
-      const uniqueFileName = `store-cover-${timestamp}-${randomId}.${fileExtension}`
+      // Use API route for reliable uploads
+      const formData = new FormData()
+      formData.append('file', file)
       
-      console.log("[COVER-UPLOAD] Starting upload:", uniqueFileName)
-      
-      const { url } = await put(uniqueFileName, file, {
-        access: "public",
-        token: blobToken,
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
       })
       
-      console.log("[COVER-UPLOAD] Upload successful:", url)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Upload failed: ${response.statusText}`)
+      }
       
-      setStoreData((prev) => ({ ...prev, store_cover_url: url }))
+      const data = await response.json()
+      console.log("[COVER-UPLOAD] API upload successful:", data.url)
+      
+      setStoreData((prev) => ({ ...prev, store_cover_url: data.url }))
       toast({
         title: "Cover image uploaded successfully!",
         variant: "default",

@@ -204,9 +204,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$serv
 ;
 async function POST(request) {
     try {
-        console.log("[DEBUG] BLOB_READ_WRITE_TOKEN exists:", !!process.env.BLOB_READ_WRITE_TOKEN);
-        console.log("[DEBUG] BLOB_READ_WRITE_TOKEN length:", process.env.BLOB_READ_WRITE_TOKEN?.length);
-        console.log("[DEBUG] BLOB_READ_WRITE_TOKEN starts with:", process.env.BLOB_READ_WRITE_TOKEN?.slice(0, 20));
         if (!process.env.BLOB_READ_WRITE_TOKEN) {
             console.error("BLOB_READ_WRITE_TOKEN is not configured");
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
@@ -217,15 +214,13 @@ async function POST(request) {
         }
         const formData = await request.formData();
         const file = formData.get("file");
-        if (!file || !(file instanceof File)) {
-            console.error("[DEBUG] No valid file provided:", file);
+        if (!file) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: "No file provided"
             }, {
                 status: 400
             });
         }
-        console.log("[DEBUG] File received:", file.name, file.size, file.type);
         const maxSize = 5 * 1024 * 1024 // 5MB
         ;
         if (file.size > maxSize) {
@@ -235,34 +230,18 @@ async function POST(request) {
                 status: 400
             });
         }
-        const validImageTypes = [
-            "image/jpeg",
-            "image/jpg",
-            "image/png",
-            "image/gif",
-            "image/webp",
-            "image/svg+xml",
-            "image/bmp",
-            "image/tiff"
-        ];
-        if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
+        if (!file.type.startsWith("image/")) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: "Only image files are allowed (JPG, PNG, GIF, WebP, SVG, BMP, TIFF)"
+                error: "Only image files are allowed"
             }, {
                 status: 400
             });
         }
-        // Upload to Vercel Blob with unique filename
-        const timestamp = Date.now();
-        const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-        const uniqueFileName = `${timestamp}-${sanitizedName}`;
-        console.log("[DEBUG] About to upload to Blob:", uniqueFileName);
-        console.log("[DEBUG] Using token ending with:", process.env.BLOB_READ_WRITE_TOKEN?.slice(-10));
-        const blob = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(uniqueFileName, file, {
+        // Upload to Vercel Blob
+        const blob = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$vercel$2f$blob$2f$dist$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["put"])(file.name, file, {
             access: "public",
             token: process.env.BLOB_READ_WRITE_TOKEN
         });
-        console.log("[DEBUG] Upload successful:", blob.url);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             url: blob.url,
             filename: file.name,

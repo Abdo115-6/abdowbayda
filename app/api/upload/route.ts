@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData()
-    const file = formData.get("file") as File | null
+    const file = formData.get("file") as File
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
@@ -20,29 +20,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File too large. Max size is 5MB" }, { status: 400 })
     }
 
-    const validImageTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/gif",
-      "image/webp",
-      "image/svg+xml",
-      "image/bmp",
-      "image/tiff",
-    ]
-    if (!validImageTypes.includes(file.type) && !file.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "Only image files are allowed (JPG, PNG, GIF, WebP, SVG, BMP, TIFF)" },
-        { status: 400 },
-      )
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 })
     }
 
-    // Upload to Vercel Blob with unique filename
-    const timestamp = Date.now()
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
-    const uniqueFileName = `${timestamp}-${sanitizedName}`
-
-    const blob = await put(uniqueFileName, file, {
+    // Upload to Vercel Blob
+    const blob = await put(file.name, file, {
       access: "public",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })

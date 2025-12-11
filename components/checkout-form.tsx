@@ -86,7 +86,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         seller_id: product.seller_id,
         product_id: product.id,
         buyer_id: userId,
-        buyer_email: userEmail,
+        // buyer_email: userEmail, // Temporarily not included due to missing DB column
         quantity,
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",
@@ -94,14 +94,14 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_name: formData.name,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
+        note: `User email: ${userEmail}` // Include email info in note for debugging
       })
 
-      // Insert order with buyer_id and buyer_email - v1.2
+      // Insert order - temporarily without buyer_email until DB schema is updated
       const { data: orderData, error: insertError } = await supabase.from("orders").insert({
         seller_id: product.seller_id,
         product_id: product.id,
         buyer_id: userId, // Add buyer_id to satisfy NOT NULL constraint
-        buyer_email: userEmail, // Add buyer_email for contact information
         quantity,
         total_price: Number.parseFloat(totalPrice),
         payment_method: "cash",
@@ -109,6 +109,7 @@ export default function CheckoutForm({ product, userId }: { product: Product; us
         buyer_name: formData.name,
         buyer_phone: formData.phone,
         buyer_address: formData.address,
+        // buyer_email: userEmail, // Temporarily removed - missing column in DB
         // notes: `Order by user: ${userId}, Email: ${userEmail}`, // Will be added back once database is updated
       }).select()
 
